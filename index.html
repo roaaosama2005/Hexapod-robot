@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Page</title>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burger Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;700;800&family=Figtree:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <style id="sections-styles">
+/* CSS for section section:header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 50px;
+  padding-bottom: 70px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+.logo-text {
+  font-family: 'Baloo Bhaijaan 2', cursive;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--text-dark);
+}
+.main-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background-color: var(--white);
+  border-radius: 50px;
+  box-shadow: 0px 4px 8px 0px rgba(123, 123, 123, 0.2);
+  padding: 0;
+}
+.main-nav .nav-link {
+  display: block;
+  padding: 10px 20px;
+  font-family: 'Figtree', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--text-dark);
+  border-radius: 50px;
+  transition: background-color 0.3s, color 0.3s;
+}
+.main-nav .nav-link.active,
+.main-nav .nav-link:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.icon-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.icon-btn .icon-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0px 4px 8px rgba(148, 148, 148, 0.25));
+}
+.icon-btn .icon-fg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+}
+.cart-icon .notification-dot {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+}
+
+/* CSS for section section:hero */
+.hero-section {
+  padding-bottom: 80px;
+}
+.hero-section-content {
+  display: grid;
+  grid-template-columns: minmax(400px, 1fr) 1.2fr;
+  align-items: center;
+  gap: 2rem;
+}
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+}
+.hero-tag {
+  background-color: var(--tag-bg);
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 50px;
+}
+.hero-title {
+  font-family: 'Baloo Bhaijaan 2', cursive;
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--text-dark);
+}
+.hero-description {
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--text-light);
+  max-width: 441px;
+}
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.btn-order {
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 20px;
+  padding: 16px 32px;
+  border-radius: 50px;
+  transition: transform 0.2s;
+}
+.btn-order:hover {
+  transform: scale(1.05);
+}
+.hero-price {
+  font-family: 'Baloo Bhaijaan 2', cursive;
+  font-weight: 600;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--text-dark);
+}
+.hero-image-container {
+  position: relative;
+  align-self: stretch;
+  min-height: 400px;
+}
+.blur-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 585px;
+  height: 585px;
+  filter: blur(180px);
+  z-index: 1;
+  opacity: 0.8;
+}
+.main-burger-img {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 585px;
+  margin: 0 auto;
+}
+.decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.decorations img {
+  position: absolute;
+}
+.deco-1 { width: 167px; top: 10%; left: 5%; transform: rotate(10.58deg); }
+.deco-2 { width: 100px; top: 15%; right: 0; transform: rotate(-64.38deg); }
+.deco-3 { width: 195px; bottom: 0; right: 10%; transform: rotate(136.22deg); }
+.deco-4 { width: 100px; bottom: 10%; left: 10%; transform: rotate(-117.41deg); }
+
+/* CSS for section section:menu */
+.products-section {
+  padding-bottom: 80px;
+  position: relative;
+}
+.products-list {
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+}
+.product-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px; /* Adjusted for better spacing */
+  padding: 16px;
+  background-color: var(--white);
+  border: 1px solid var(--border-primary);
+  border-radius: 24px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 15px 0px rgba(0, 0, 0, 0.15);
+}
+.product-card.inactive {
+  border-color: var(--border-light);
+}
+.product-image {
+  width: 80px;
+  height: 72px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.product-rating {
+  display: flex;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--primary-color);
+}
+.product-name {
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.2;
+}
+.product-price {
+  font-family: 'Baloo Bhaijaan 2', cursive;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--primary-color);
+}
+.add-to-cart-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border-radius: 12px 0px 24px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.add-to-cart-btn img {
+  width: 24px;
+  height: 24px;
+}
+.slider-controls {
+  position: absolute;
+  bottom: 80px;
+  right: 10%;
+  display: flex;
+  gap: 14px;
+}
+.slider-btn {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.2s;
+}
+.slider-btn:hover {
+  transform: scale(1.1);
+}
+.slider-btn.prev-btn {
+  opacity: 0.5;
+}
+@media (max-width: 992px) {
+  .slider-controls {
+    position: static;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+}
+  </style>
+  <script src="global.js" defer></script>
+</head>
+<body>
+<div class="page-wrapper">
+<header class="site-header container">
+  <a href="#" class="logo">
+    <img src="images/358f6f57d9587c203d34d0ebe1f509d217b6b2ea.png" alt="Burger Logo">
+    <span class="logo-text">Burger</span>
+  </a>
+  <nav class="main-nav">
+    <ul>
+      <li><a href="#hero" class="nav-link active">Home</a></li>
+      <li><a href="#menu" class="nav-link">Menu</a></li>
+      <li><a href="#" class="nav-link">Our story</a></li>
+      <li><a href="#" class="nav-link">Contact</a></li>
+    </ul>
+  </nav>
+  <!--merged image-->
+  <div class="header-icons">
+    <button class="icon-btn">
+      <img src="images/2_74.svg" alt="Search background" class="icon-bg">
+      <img src="images/2_78.svg" alt="Search Icon" class="icon-fg">
+    </button>
+    <button class="icon-btn">
+      <img src="images/2_75.svg" alt="Favorites background" class="icon-bg">
+      <img src="images/2_80.svg" alt="Favorites Icon" class="icon-fg">
+    </button>
+    <button class="icon-btn cart-icon">
+      <img src="images/2_76.svg" alt="Cart background" class="icon-bg">
+      <img src="images/2_81.svg" alt="Cart Icon" class="icon-fg">
+      <img src="images/2_85.svg" alt="Notification" class="notification-dot">
+    </button>
+  </div>
+</header>
+<section id="hero" class="hero-section">
+  <div class="hero-section-content container">
+    <div class="hero-text">
+      <span class="hero-tag">THE ORIGINAL TASTE</span>
+      <h1 class="hero-title">OLD SCHOOL CHEESE BURGER</h1>
+      <p class="hero-description">Classic beef, melted cheese, fresh toppings nostalgic flavor in a bun.</p>
+      <div class="order-actions">
+        <a href="#" class="btn-order">Order Now</a>
+        <span class="hero-price">$5.99</span>
+      </div>
+    </div>
+    <!--merged image-->
+    <div class="hero-image-container">
+      <img src="images/3_53.svg" alt="Gradient blur" class="blur-background">
+      <img src="images/9a9ee34465bb8262cc4b587f58801e0a027abf5b.png" alt="Old School Cheese Burger" class="main-burger-img">
+      <div class="decorations">
+        <img src="images/df83b0ef6ea20bb33028cac055164aa47e8dd4a2.png" alt="decoration" class="deco-1">
+        <img src="images/5f21f3f52384f15983fbde648777a51a78f8d39c.png" alt="decoration" class="deco-2">
+        <img src="images/df83b0ef6ea20bb33028cac055164aa47e8dd4a2.png" alt="decoration" class="deco-3">
+        <img src="images/5f21f3f52384f15983fbde648777a51a78f8d39c.png" alt="decoration" class="deco-4">
+      </div>
+    </div>
+  </div>
+</section>
+<section id="menu" class="products-section">
+  <div class="products-list container">
+    <article class="product-card">
+      <img src="images/9a9ee34465bb8262cc4b587f58801e0a027abf5b.png" alt="Old School Cheese Burger" class="product-image">
+      <div class="product-info">
+        <div class="product-rating">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <h3 class="product-name">Old School Cheese Burger</h3>
+        <p class="product-price">$5.99</p>
+      </div>
+      <button class="add-to-cart-btn">
+        <img src="images/22_55.svg" alt="Add to cart">
+      </button>
+    </article>
+    <article class="product-card inactive">
+      <img src="images/7b7f6ac6fd5591d0d42661aa8e5ee9dd5e41562a.png" alt="Double Beef Bacon Burger" class="product-image">
+      <div class="product-info">
+        <div class="product-rating">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <h3 class="product-name">Double Beef Bacon Burger</h3>
+        <p class="product-price">$10.99</p>
+      </div>
+      <button class="add-to-cart-btn">
+        <img src="images/22_59.svg" alt="Add to cart">
+      </button>
+    </article>
+  </div>
+  <div class="slider-controls">
+    <button class="slider-btn prev-btn"><img src="images/3_49.svg" alt="Previous"></button>
+    <button class="slider-btn next-btn"><img src="images/3_46.svg" alt="Next"></button>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
