@@ -8,16 +8,18 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: linear-gradient(180deg, #002b5b, #004c8c);
+      background: linear-gradient(180deg, #001f3f, #004c8c, #00bfff);
       color: #fff;
       overflow-x: hidden;
     }
     header {
-      background: #011c3a;
+      background: rgba(1,28,58,0.95);
       padding: 18px 20px;
       position: sticky;
       top: 0;
       z-index: 10;
+      backdrop-filter: blur(10px);
+      transition: background 0.3s ease;
     }
     .container {
       max-width: 1000px;
@@ -43,36 +45,45 @@
       padding: 8px 14px;
       border: 2px solid #00b4ff;
       border-radius: 8px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
       transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0,180,255,0.3);
+      box-shadow: 0 0 8px rgba(0,180,255,0.2);
     }
     nav a:hover {
-      background: #00b4ff;
+      background: #00bfff;
       color: #fff;
-      box-shadow: 0 0 12px #00b4ff;
+      box-shadow: 0 0 15px #00bfff;
       transform: scale(1.05);
     }
+    nav a.active-link {
+      border-bottom: 3px solid #00ffff;
+      color: #00ffff;
+    }
+
     .hero, section.card {
       background: rgba(255,255,255,0.1);
       border-radius: 12px;
       padding: 28px;
       margin-bottom: 18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
       display: none;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
     }
-    .active {
+    .hero.active, section.card.active {
       display: block !important;
       animation: fadeIn 0.6s ease;
     }
     @keyframes fadeIn {
-      from {opacity:0;}
-      to {opacity:1;}
+      from {opacity:0; transform: translateY(20px);}
+      to {opacity:1; transform: translateY(0);}
     }
+
     .hero h1 {
       margin: 0 0 8px;
-      font-size: 30px;
-      color: #00bfff;
+      font-size: 32px;
+      color: #00f0ff;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
     }
     .hero p {
       margin: 0 0 12px;
@@ -86,40 +97,112 @@
       border-radius: 8px;
       text-decoration: none;
       font-weight: bold;
+      transition: all 0.3s ease;
     }
+    .btn:hover {
+      background: #00ffff;
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00ffff;
+    }
+
     h2 {
       margin-top: 0;
       color: #00bfff;
     }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
       gap: 12px;
     }
+
     .feature {
-      padding: 12px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.1);
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.2);
-    }
-    footer {
-      padding: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
       text-align: center;
-      color: #aad8ff;
-      font-size: 14px;
     }
-    img.responsive {
-      width: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    video {
-      width: 100%;
-      border-radius: 8px;
-      background: #000;
+    .feature:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     }
 
-    /* ✅ تحسين عرض الهاتف */
+   /* Team Section Grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  justify-items: center;
+  margin-top: 16px;
+}
+
+/* Profile Card */
+.profile-card {
+  width: 100%;
+  max-width: 180px; /* أصغر عرض */
+  background-color: rgba(255,255,255,0.05);
+  padding: 12px; /* أقل padding */
+  border-radius: 12px;
+  text-align: center;
+  font-family: sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.profile-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.image-container {
+  margin-bottom: 12px; /* أقل مسافة */
+  overflow: hidden;
+  position: relative;
+  border-radius: 6px;
+}
+.image-container img {
+  width: 100%;
+  display: block;
+  filter: grayscale(100%);
+  border-radius: 6px;
+  transition: transform 0.3s ease;
+}
+.image-container img:hover {
+  transform: scale(1.05);
+  filter: grayscale(0%);
+}
+
+.name-highlight {
+  display: inline-block;
+  background-color: #00bfff;
+  color: #333;
+  padding: 4px 8px; /* أصغر padding */
+  font-size: 1.1em; /* أصغر حجم الخط */
+  font-weight: bold;
+  margin: 0 0 4px 0;
+  line-height: 1.1;
+}
+
+.title {
+  color: #aad8ff;
+  font-size: 0.75em; /* أصغر */
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+}
+
+.description {
+  color: #fff;
+  font-size: 0.8em; /* أصغر */
+  line-height: 1.2;
+  margin: 0;
+}
+
+
     @media (max-width: 768px) {
       header .container {
         flex-direction: column;
@@ -134,7 +217,7 @@
         padding: 6px 10px;
       }
       .hero h1 {
-        font-size: 22px;
+        font-size: 24px;
         text-align: center;
       }
       .hero p {
@@ -150,22 +233,38 @@
         padding: 18px;
       }
     }
-
     @media (max-width: 480px) {
-      nav ul {
-        gap: 6px;
-      }
-      nav a {
-        padding: 6px 8px;
-        font-size: 13px;
-      }
-      .container {
-        padding: 0 10px;
-      }
-      img.responsive, video {
-        max-height: 240px;
-      }
-    }
+  nav ul {gap:6px;}
+  nav a {padding:6px 8px;font-size:13px;}
+  .container {padding:0 10px;}
+  img.responsive, video {max-height:240px;}
+
+  /* Team Section لكل اتنين جنب بعض */
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* تصغير الكارت نفسه */
+  .profile-card {
+    max-width: 140px; /* من 180px إلى 140px */
+    padding: 10px; /* من 12px إلى 10px */
+  }
+
+  .name-highlight {
+    font-size: 1em; /* تصغير الاسم شويه */
+    padding: 3px 6px;
+  }
+
+  .title {
+    font-size: 0.7em;
+  }
+
+  .description {
+    font-size: 0.7em;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -177,14 +276,14 @@
       </div>
       <nav>
         <ul>
-          <li><a onclick="showSection('home')">Home</a></li>
-          <li><a onclick="showSection('about')">About</a></li>
-          <li><a onclick="showSection('features')">Features</a></li>
-          <li><a onclick="showSection('components')">Components</a></li>
-          <li><a onclick="showSection('how')">How It Works</a></li>
-          <li><a onclick="showSection('media')">Media</a></li>
-          <li><a onclick="showSection('team')">Team</a></li>
-          <li><a onclick="showSection('contact')">Contact</a></li>
+          <li><a onclick="showSection('home')" id="link-home">Home</a></li>
+          <li><a onclick="showSection('about')" id="link-about">About</a></li>
+          <li><a onclick="showSection('features')" id="link-features">Features</a></li>
+          <li><a onclick="showSection('components')" id="link-components">Components</a></li>
+          <li><a onclick="showSection('how')" id="link-how">How It Works</a></li>
+          <li><a onclick="showSection('media')" id="link-media">Media</a></li>
+          <li><a onclick="showSection('team')" id="link-team">Team</a></li>
+          <li><a onclick="showSection('contact')" id="link-contact">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -214,18 +313,22 @@
       <h2>Features</h2>
       <div class="grid">
         <div class="feature">
+          <img src="https://img.icons8.com/ios-filled/50/00bfff/robot-2.png"/>
           <h3>Smart Control</h3>
           <p>Utilizes gait algorithms to coordinate leg movement and maintain balance.</p>
         </div>
         <div class="feature">
+          <img src="https://img.icons8.com/ios-filled/50/00bfff/camera.png"/>
           <h3>Live Streaming</h3>
           <p>Integrated camera for real-time video feedback.</p>
         </div>
         <div class="feature">
+          <img src="https://img.icons8.com/ios-filled/50/00bfff/balance.png"/>
           <h3>Adaptive Balance</h3>
           <p>Self-adjusts posture to stay stable on uneven terrain.</p>
         </div>
         <div class="feature">
+          <img src="https://img.icons8.com/ios-filled/50/00bfff/add.png"/>
           <h3>Modular & Expandable</h3>
           <p>You can add sensors like ultrasonic, IMU, or Lidar modules.</p>
         </div>
@@ -233,87 +336,247 @@
     </section>
 
     <!-- Components Section -->
-    <section id="components" class="card">
-      <h2>Main Components</h2>
-      <div class="grid">
-        <div class="feature">
-          <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="STM32F103C8T6">
-          <h3>STM32F103C8T6 (Blue Pill)</h3>
-          <p>The brain of the robot — controls all 18 servo motors with high precision and ensures smooth movement through advanced algorithms.</p>
-        </div>
-        <div class="feature">
-          <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="ESP32-CAM">
-          <h3>ESP32-CAM</h3>
-          <p>The eyes of the robot — captures live video and streams it directly to your device, enabling real-time vision and potential AI upgrades.</p>
-        </div>
-        <div class="feature">
-          <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="PCA9685 Servo Driver">
-          <h3>PCA9685 Servo Driver</h3>
-          <p>The muscle controller — expands STM32’s capacity to control 18 servo motors simultaneously and efficiently.</p>
-        </div>
-        <div class="feature">
-          <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="HC-05 Bluetooth Module">
-          <h3>HC-05 Bluetooth Module</h3>
-          <p>The wireless bridge — connects the robot to your smartphone, enabling full control through the mobile app.</p>
-        </div>
-      </div>
-    </section>
+<section id="components" class="card">
+  <h2>Main Components</h2>
+  <div class="grid">
+    <div class="feature">
+      <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="STM32F103C8T6">
+      <h3>STM32F103C8T6 (Blue Pill)</h3>
+      <p>The brain of the robot — controls all 18 servo motors with high precision and ensures smooth movement through advanced algorithms.</p>
+    </div>
+    <div class="feature">
+      <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="ESP32-CAM">
+      <h3>ESP32-CAM</h3>
+      <p>The eyes of the robot — captures live video and streams it directly to your device, enabling real-time vision and potential AI upgrades.</p>
+    </div>
+    <div class="feature">
+      <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="PCA9685 Servo Driver">
+      <h3>PCA9685 Servo Driver</h3>
+      <p>The muscle controller — expands STM32’s capacity to control 18 servo motors simultaneously and efficiently.</p>
+    </div>
+    <div class="feature">
+      <img class="responsive" src="https://live.staticflickr.com/65535/51610365629_13af007f74_b.jpg" alt="HC-05 Bluetooth Module">
+      <h3>HC-05 Bluetooth Module</h3>
+      <p>The wireless bridge — connects the robot to your smartphone, enabling full control through the mobile app.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- How It Works Section -->
-    <section id="how" class="card">
-      <h2>How It Works</h2>
-      <p>Our Hexapod Robot combines power, intelligence, and interactivity — all in one design.  
-      It’s built with the STM32 microcontroller for ultra-precise motion control, the ESP32-CAM for live video streaming,  
-      and a custom mobile app that lets you control everything from the palm of your hand.</p>
+<!-- How It Works Section -->
+<section id="how" class="card">
+  <h2>How It Works</h2>
+  <div class="grid">
+    <div class="feature">
+      <img src="https://img.icons8.com/ios-filled/50/00bfff/robot-2.png" alt="Smart Motion">
+      <h3>Smart Motion with STM32</h3>
+      <p>Coordinates six legs to move like a real insect — stable, balanced, and smooth in every step.</p>
+    </div>
+    <div class="feature">
+      <img src="https://img.icons8.com/ios-filled/50/00bfff/camera.png" alt="Live Vision">
+      <h3>Live Vision with ESP32-CAM</h3>
+      <p>Streams real-time video through Wi-Fi, letting you see exactly what the robot sees.</p>
+    </div>
+    <div class="feature">
+      <img src="https://img.icons8.com/ios-filled/50/00bfff/smartphone.png" alt="Wireless Control">
+      <h3>Wireless App Control</h3>
+      <p>Control direction, speed, and camera view from your phone with a single touch.</p>
+    </div>
+    <div class="feature">
+      <img src="https://img.icons8.com/ios-filled/50/00bfff/artificial-intelligence.png" alt="AI Upgrades">
+      <h3>AI-Based Upgrades (Future Ready)</h3>
+      <p>The camera can detect obstacles or track objects using AI, making it semi-autonomous.</p>
+    </div>
+  </div>
+</section>
 
-      <ul style="margin-left:20px; line-height:1.7;">
-        <li><strong>1️⃣ Smart Motion with STM32:</strong> Coordinates six legs to move like a real insect — stable, balanced, and smooth in every step.</li>
-        <li><strong>2️⃣ Live Vision with ESP32-CAM:</strong> Streams real-time video through Wi-Fi, letting you see exactly what the robot sees.</li>
-        <li><strong>3️⃣ Wireless App Control:</strong> Control direction, speed, and camera view from your phone with a single touch.</li>
-        <li><strong>4️⃣ AI-Based Upgrades (Future Ready):</strong> The camera can detect obstacles or track objects using AI, making it semi-autonomous.</li>
-      </ul>
-    </section>
-
-    <!-- Media Section -->
-    <section id="media" class="card">
-      <h2>Media</h2>
-      <p>Check out the robot in action below:</p>
+<!-- Media Section -->
+<section id="media" class="card">
+  <h2>Media</h2>
+  <p>Check out the robot in action below:</p>
+  <div class="grid">
+    <div class="feature">
       <video controls>
         <source src="your-video-url.mp4" type="video/mp4">
         Your browser does not support the video element.
       </video>
-    </section>
+      <h3>Hexapod in Motion</h3>
+      <p>Watch the robot walking smoothly on uneven terrain.</p>
+    </div>
+    <div class="feature">
+      <video controls>
+        <source src="your-video-url2.mp4" type="video/mp4">
+        Your browser does not support the video element.
+      </video>
+      <h3>Live Streaming Demo</h3>
+      <p>See how the ESP32-CAM streams live video directly to a device.</p>
+    </div>
+    <div class="feature">
+      <video controls>
+        <source src="your-video-url3.mp4" type="video/mp4">
+        Your browser does not support the video element.
+      </video>
+      <h3>Obstacle Navigation</h3>
+      <p>Demonstration of the hexapod navigating around obstacles.</p>
+    </div>
+  </div>
+</section>
 
     <!-- Team Section -->
     <section id="team" class="card">
       <h2>Team</h2>
-      <p>
-        1. Demiana Zaref Gamil (Team Leader)<br>
-        2. Roaa Osama Abdelrahman<br>
-        3. Nouran Mohamed Mahmoud<br>
-        4. Donia Ahmed Abdelhamid<br>
-        5. Farha Yasser<br>
-        6. Nada Mohamed El-Sayed<br>
-        7. Fatma Sabry<br>
-        8. Aya Ramadan<br>
-      </p>
+      <div class="team-grid">
+        <!-- Members -->
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Demiana Zaref ">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Demiana Zaref </h2>
+            <p class="title">TEAM LEADER</p>
+            <p class="description">Leading the team and managing project development.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Roaa Osama ">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Roaa Osama </h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Specializes in mechanical design and robotics control.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Nouran Mohamed">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Nouran Mohamed </h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Handles electronics and embedded systems.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Donia Ahmed ">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Donia Ahmed </h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Responsible for software integration and testing.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Farha Yasser ">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Farha Yasser </h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Focuses on sensor modules and data acquisition.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Nada Mohamed ">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Nada Mohamed </h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Supports circuit design and power management.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Fatma Sabry">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Fatma Sabry</h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Works on motion algorithms and gait control.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Aya Ramadan">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Aya Ramadan</h2>
+            <p class="title">MEMBER</p>
+            <p class="description">Handles documentation and project coordination.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:24px;">Supervisors</h2>
+      <div class="team-grid">
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Eng Esraa Hamdy">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Eng Esraa Hamdy</h2>
+            <p class="title">SUPERVISOR</p>
+            <p class="description">Guides the team and provides technical supervision.</p>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div class="image-container">
+            <img src="https://via.placeholder.com/150" alt="Dr Mohamed Attia">
+          </div>
+          <div class="text-content">
+            <h2 class="name-highlight">Dr Mohamed Attia</h2>
+            <p class="title">SUPERVISOR</p>
+            <p class="description">Provides academic guidance and expertise.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="card">
-      <h2>Contact Us</h2>
-      <p>For inquiries or collaboration, reach out via email or social media.</p>
-    </section>
+<section id="contact" class="card">
+  <h2>Contact Us</h2>
+  <p>For inquiries or collaboration, reach out via email or social media:</p>
+  <div class="grid">
+    <div class="feature">
+      <h3>Email</h3>
+      <p>hexapod.project@example.com</p>
+    </div>
+    <div class="feature">
+      <h3>Phone</h3>
+      <p>+123 456 7890</p>
+    </div>
+    <div class="feature">
+      <h3>Social Media</h3>
+      <p>
+        <a href="#" style="color:#00bfff;text-decoration:none;">Facebook</a> | 
+        <a href="#" style="color:#00bfff;text-decoration:none;">Twitter</a> | 
+        <a href="#" style="color:#00bfff;text-decoration:none;">Instagram</a>
+      </p>
+    </div>
+  </div>
+</section>
+
   </main>
 
   <footer>
+  <div style="text-align:center; margin-bottom:8px;">
     © All Rights Reserved — Hexapod Robot Project
-  </footer>
+  </div>
+  <div class="social-icons" style="text-align:center;">
+    <a href="#"><img src="https://img.icons8.com/ios-glyphs/24/00bfff/facebook-new.png"/></a>
+    <a href="#"><img src="https://img.icons8.com/ios-glyphs/24/00bfff/twitter.png"/></a>
+    <a href="#"><img src="https://img.icons8.com/ios-glyphs/24/00bfff/instagram-new.png"/></a>
+  </div>
+</footer>
+
 
   <script>
     function showSection(id) {
       document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
       document.getElementById(id).classList.add("active");
+      document.querySelectorAll("nav a").forEach(a => a.classList.remove("active-link"));
+      document.getElementById("link-" + id).classList.add("active-link");
       window.scrollTo({top:0, behavior:'smooth'});
     }
   </script>
