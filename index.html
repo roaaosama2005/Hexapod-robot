@@ -1,551 +1,2584 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Hexapod Robot Project — v3.0 (Final)</title>
-<meta name="description" content="Hexapod Robot Project — six-legged exploration robot built with STM32, ESP32-CAM and modular sensors.">
-<meta name="keywords" content="hexapod, robotics, STM32, ESP32, PCA9685, hexapod robot">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --maxw:1180px;
-    --nav-h:68px;
-    --accent: #00eaff;
-    --accent-2: #7b61ff;
-    --glass: rgba(255,255,255,0.06);
-    --muted: #cfefff;
-    --card-border: rgba(255,255,255,0.10);
-    --dark-bg-1:#020024; --dark-bg-2:#071748;
-    /* Light-theme specifics */
-    --light-bg-outer: #e3e7ea; /* soft gray outer */
-    --light-bg-center: #e9f6ff; /* light blue center */
-    --light-text: #0b2a3b; /* dark bluish text for contrast */
-    --light-muted: #3d5563;
-    --light-card-bg: rgba(255,255,255,0.96);
-    --light-card-border: rgba(10,20,30,0.06);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased}
-  /* Default dark theme */
-  body{
-    background:linear-gradient(135deg,var(--dark-bg-1) 0%, var(--dark-bg-2) 45%, #003b70 100%);
-    color:#eef9ff; scroll-behavior:smooth;
-  }
-  a{color:inherit;text-decoration:none}
-  img,video{max-width:100%;display:block}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hexapod-Robot Project - Unified Vision</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  /* HEADER */
-  header{position:fixed;inset:0 0 auto 0;height:var(--nav-h);display:flex;align-items:center;justify-content:center;z-index:1400;
-    background: linear-gradient(180deg, rgba(0,0,12,0.55), rgba(0,0,30,0.35));
-    backdrop-filter: blur(8px); border-bottom:1px solid rgba(255,255,255,0.04);}
-  .nav-inner{max-width:var(--maxw);width:100%;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand img{height:44px;border-radius:8px;background:#fff;padding:3px}
-  .brand h1{font-size:1rem;margin:0;color:var(--muted);font-weight:700}
-  nav ul{display:flex;gap:8px;list-style:none;margin:0;padding:0;align-items:center}
-  nav a{padding:7px 10px;border-radius:10px;background:rgba(255,255,255,0.03);color:var(--accent);font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;font-size:0.95rem}
-  nav a:hover{transform:translateY(-3px);box-shadow:0 8px 26px rgba(0,0,0,0.45)}
-  nav a.active{background:var(--accent);color:#001f2a;box-shadow:0 10px 34px rgba(0,234,255,0.12)}
-  .controls{display:flex;gap:10px;align-items:center}
-  .theme-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer;color:var(--accent)}
-  .home-btn{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.03);color:var(--muted);font-weight:600;cursor:pointer}
-  .burger{display:none}
-  @media (max-width:920px){nav ul{display:none}.burger{display:block;background:transparent;border:0;color:var(--accent);font-weight:700;cursor:pointer}}
+    <style>
+        /* --------------------------------- */
+        /* CSS: الألوان والتصميم الأساسي */
+        /* --------------------------------- */
+        
+        :root {
+            /* الوضع النهاري */
+            --bg-light-start: #CFEEFA; 
+            --bg-light-end: #bfc9ce;   
+            --text-color: #1F2937; 
+            
+            --glass-blur: 12px; 
+            --glass-bg: rgba(255, 255, 255, 0.2); 
+            --glass-border: rgba(255, 255, 255, 0.7); 
+            --glass-shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.08), 0 0 8px rgba(255, 255, 255, 0.5); 
+            
+            --glass-border-top-glow: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.8));
+            
+            --primary-color: #007BFF; 
+            --accent-glow: rgba(0, 123, 255, 0.5); 
+            --secondary-accent: #C391D9; 
+            
+            --nav-link-active-bg: #E3F2FD; 
+            --nav-link-active-color: #1565C0; 
+            --dynamic-bg-color1: #c9effd;
+            --dynamic-bg-color2: #d6f2fe; 
+            --cta-gradient-start: #007BFF;
+            --cta-gradient-end: #00BFFF;
+            --cta-hover-glow: 0 0 25px rgba(0, 191, 255, 0.7); 
+            --cursor-glow-color: rgba(0, 123, 255, 0.2); 
+            
+            --split-nav-bg: rgba(255, 255, 255, 0.2);
+            --split-nav-scrolled-bg: rgba(255, 255, 255, 0.5);
+            
+            /* Default Modal Colors - Overridden by JS */
+            --modal-primary-color: var(--primary-color);
+            --modal-primary-color-hover: #0056b3; 
+            --modal-shadow-glow: 0 0 20px var(--primary-color);
+            --modal-primary-color-light: #E3F2FD;
+        }
 
-  /* HERO */
-  .hero{min-height:calc(100vh - var(--nav-h));margin-top:var(--nav-h);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px 18px}
-  .bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,0,36,0.18) 0%, rgba(0,0,0,0.45) 70%);z-index:0}
-  .neon-grid{position:absolute;inset:0;background-image:linear-gradient(transparent 50%, rgba(0,234,255,0.02) 50%), linear-gradient(90deg, transparent 50%, rgba(123,97,255,0.015) 50%);background-size:60px 60px;opacity:0.08;mix-blend-mode:overlay;z-index:0}
-  .rings{position:absolute;inset:0;pointer-events:none;z-index:0}
-  .ring{position:absolute;border-radius:50%;filter:blur(40px);opacity:.08}
-  .r1{width:520px;height:520px;right:-120px;top:-80px;background:radial-gradient(circle,#00eaff 0,#7b61ff 60%,transparent 70%)}
-  .r2{width:360px;height:360px;left:-80px;bottom:-80px;background:radial-gradient(circle,#7b61ff 0,#00eaff 60%,transparent 70%)}
+        
+        /* وضع الألوان الليلية (Dark Mode) */
+        .dark-mode {
+            --bg-light-start: #10141A; 
+            --bg-light-end: #2C3E50;   
+            --text-color: #ECF0F1;
+            
+            --glass-blur: 10px; 
+            --glass-bg: rgba(44, 62, 80, 0.2); 
+            --glass-border: rgba(52, 73, 94, 0.8);
+            
+            --glass-shadow-soft: 0 6px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 191, 255, 0.3); 
+            
+            --glass-border-top-glow: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.2));
 
-  .viewer{width:min(960px,92%);max-width:960px;aspect-ratio:16/9;position:relative;margin:0 auto;z-index:2;
-    border-radius:18px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-    box-shadow:0 20px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.04)}
-  .viewer .imageWrap{position:absolute;inset:0;display:block;cursor:grab;touch-action:pan-y}
-  .viewer img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .25s ease,transform .25s ease;will-change:transform,opacity;user-select:none;-webkit-user-drag:none}
-  .viewer .caption{position:absolute;left:14px;bottom:14px;background:rgba(0,0,0,0.4);padding:8px 10px;border-radius:8px;color:#eafcff;font-weight:600;font-size:0.95rem}
+            --primary-color: #00BFFF; 
+            --accent-glow: rgba(0, 191, 255, 0.4);
+            --secondary-accent: #DDA0DD; 
 
-  .hero h2{margin-top:18px;font-size:clamp(26px,4.2vw,48px);color:var(--accent);letter-spacing:2px;font-weight:800}
-  .hero p{margin-top:10px;color:var(--muted);max-width:900px;margin-left:auto;margin-right:auto}
-  .hero-cta{margin-top:16px;display:flex;gap:12px;justify-content:center}
-  .btn{padding:12px 18px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
-  .btn-primary{background:var(--accent);color:#001f2a;box-shadow:0 10px 30px rgba(0,234,255,0.12)}
-  .btn-outline{background:transparent;border:2px solid var(--accent);color:var(--accent)}
-  .small-note{margin-top:8px;font-size:0.9rem;color:#cfefff;opacity:0.9}
+            --nav-link-active-bg: #34495E; 
+            --nav-link-active-color: #00BFFF; 
+            --dynamic-bg-color1: #1a2a3a; 
+            --dynamic-bg-color2: #283a4c; 
+            --cta-gradient-start: #00BFFF;
+            --cta-gradient-end: #1E90FF;
+            --cta-hover-glow: 0 0 25px rgba(30, 144, 255, 0.7); 
+            --cursor-glow-color: rgba(30, 144, 255, 0.15); 
+            
+            --split-nav-bg: rgba(44, 62, 80, 0.2);
+            --split-nav-scrolled-bg: rgba(44, 62, 80, 0.5);
+            
+            /* Default Modal Colors for Dark Mode - Overridden by JS */
+            --modal-primary-color: var(--primary-color);
+            --modal-primary-color-hover: #008fcc; 
+            --modal-shadow-glow: 0 0 20px var(--primary-color);
+            --modal-primary-color-light: #34495E;
+        }
 
-  /* MAIN & SINGLE-SECTION MODE */
-  main{max-width:var(--maxw);margin:40px auto;padding:0 20px 90px;position:relative}
-  section.card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:14px;padding:26px;margin-bottom:28px;box-shadow:0 12px 30px rgba(0,0,0,0.45);backdrop-filter:blur(8px);border:1px solid var(--card-border);opacity:0;transform:translateY(18px)}
-  section.card.revealed{opacity:1;transform:none;transition:all .6s cubic-bezier(.2,.9,.3,1)}
-  .section-title{color:var(--accent);font-size:1.6rem;margin:0 0 12px}
-  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));align-items:stretch}
-  .card-feature{background:var(--glass);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);transition:transform .28s,box-shadow .28s}
-  .card-feature:hover{transform:translateY(-8px);box-shadow:0 18px 44px rgba(0,0,0,0.5)}
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden; 
+            cursor: default; 
 
-  /* timeline compact single row */
-  .timeline{display:flex;flex-direction:column;gap:12px}
-  .timeline .steps{display:flex;gap:8px;flex-wrap:nowrap;overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
-  .timeline .step{flex:0 0 auto;padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);cursor:pointer;white-space:nowrap;font-weight:600;transition:all .18s}
-  .timeline .step.active{background:var(--accent);color:#001f2a;box-shadow:0 10px 30px rgba(0,234,255,0.08)}
-  .timeline .desc{margin-top:8px;background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04)}
+            background-color: var(--bg-light-start); 
+            background-image: 
+                radial-gradient(at 20% 80%, var(--dynamic-bg-color1) 0%, transparent 50%),
+                radial-gradient(at 80% 20%, var(--dynamic-bg-color2) 0%, transparent 50%);
+            background-size: 200% 200%, 200% 200%; 
+            background-position: 0% 0%; 
+            background-repeat: no-repeat;
+            
+            animation: backgroundPan 30s ease-in-out infinite alternate; 
+            transition: background-color 0.8s ease-in-out, color 0.8s ease-in-out; 
+        }
 
-  .tech-item{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
-  .media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
-  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;align-items:start}
-  .profile{background:var(--glass);padding:12px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,0.06)}
-  .profile img{width:100%;height:140px;object-fit:cover;border-radius:8px;filter:grayscale(80%);transition:transform .28s,filter .28s}
-  .profile img:hover{transform:scale(1.04);filter:grayscale(0)}
-  .profile .name{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:8px;background:var(--accent);color:#001f2a;font-weight:700}
+        /* تأثير الماوس Glow Effect */
+        .cursor-glow {
+            position: fixed;
+            width: 40px; 
+            height: 40px;
+            border-radius: 50%;
+            pointer-events: none; 
+            z-index: 9999;
+            opacity: 0.8;
+            mix-blend-mode: screen; 
+            filter: blur(8px); 
+            background: var(--cursor-glow-color);
+            transform: translate(-50%, -50%); 
+            transition: background 0.3s ease, transform 0.1s linear; 
+        }
 
-  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-  input,textarea{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#eafcff;width:100%}
-  textarea{min-height:120px;resize:vertical}
-  footer{padding:28px 12px;text-align:center;color:#dff7ff;margin-top:18px}
+        @keyframes backgroundPan {
+            0% { background-position: 0% 0%, 0% 0%; }
+            100% { background-position: 100% 100%, 100% 100%; }
+        }
+        
+        * {
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
 
-  /* floating section indicator */
-  .sec-indicator{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:1500}
-  .sec-indicator button{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.06);cursor:pointer}
-  .sec-indicator button.active{background:var(--accent);box-shadow:0 8px 20px rgba(0,234,255,0.08)}
+        section {
+            padding: 100px 5%;
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            padding-top: 100px;
+            position: relative;
+        }
 
-  /* live stats card */
-  .live-stats{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-  .stat{background:rgba(0,0,0,0.18);padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);min-width:120px;text-align:center}
-  .stat strong{display:block;font-size:1.2rem}
+        .hero-section .text-content {
+            flex: 1;
+            max-width: 50%;
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
 
-  /* transitions for section switch (fade out/in) */
-  .fade-out{animation:fadeOut .36s forwards}
-  .fade-in{animation:fadeIn .42s forwards}
-  @keyframes fadeOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(8px)}}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        .hero-section p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.85;
+        }
 
-  /* RESPONSIVE */
-  @media (max-width:920px){
-    .viewer{width:96%;aspect-ratio:4/3}
-    nav ul{display:none}
-    .burger{display:block}
-    .nav-inner{gap:10px}
-    .sec-indicator{display:none}
-  }
-  @media (max-width:520px){
-    .profile img{height:110px}
-    .brand h1{font-size:0.95rem}
-    header{height:64px}
-    .hero{padding:18px 12px}
-    nav a{font-size:0.88rem;padding:6px 8px}
-  }
+        .cta-button {
+            background-image: linear-gradient(to right, var(--cta-gradient-start), var(--cta-gradient-end));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+        }
 
-  /* LIGHT THEME (ADJUSTED AS REQUESTED) */
-  body.light{
-    /* soft gray outer and gentle light-blue center */
-    background: radial-gradient(circle at 50% 45%, var(--light-bg-center) 0%, rgba(233,246,255,0.9) 25%, var(--light-bg-outer) 70%);
-    color: var(--light-text);
-  }
-  body.light header{
-    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.98));
-    border-bottom:1px solid rgba(10,20,30,0.04);
-  }
-  /* nav links darker text for readability */
-  body.light nav a{background:rgba(10,20,30,0.02); color: var(--light-text);}
-  body.light nav a.active{background:var(--accent); color:#001f2a;}
-  /* cards and viewer should be clearly visible and slightly off-white */
-  body.light .card-feature, body.light .profile, body.light .viewer{background:var(--light-card-bg); color:var(--light-text); border:1px solid var(--light-card-border)}
-  body.light .viewer .caption{background:rgba(255,255,255,0.94); color:var(--light-text)}
-  body.light input, body.light textarea{background:#fff;color:var(--light-text);border:1px solid rgba(10,20,30,0.06)}
-  body.light .stat{background:rgba(255,255,255,0.96); border:1px solid rgba(10,20,30,0.04); color:var(--light-text)}
-  body.light .sec-indicator button{background:rgba(10,20,30,0.08)}
-  body.light .sec-indicator button.active{background:var(--accent)}
-  /* ensure small muted text in light is darker */
-  body.light .small-note, body.light .lead { color: var(--light-muted); }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--cta-hover-glow); 
+        }
 
-  /* ensure buttons remain visible in light mode */
-  body.light .btn-primary{background:var(--accent); color:#001f2a}
-  body.light .btn-outline{border:2px solid rgba(2,12,30,0.06); color:var(--light-text)}
-</style>
+        /* مؤشر التمرير (السهم فقط) */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            opacity: 1;
+            animation: bounce 2s infinite;
+            transition: opacity 0.3s;
+            text-decoration: none; 
+            cursor: pointer;
+        }
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* تنسيقات الصورة النابضة (Hero Image) */
+        .hexapod-visual {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px; 
+            box-shadow: 0 0 50px var(--accent-glow); 
+        }
+        
+        .hexapod-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            border-radius: 50%;
+            border: 5px solid var(--secondary-accent); 
+            box-shadow: 0 0 20px var(--secondary-accent);
+            opacity: 0.95;
+            transition: all 0.5s;
+            animation: pulse 5s infinite ease-in-out alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px var(--secondary-accent), 0 0 40px var(--accent-glow); }
+            100% { transform: scale(1.05); box-shadow: 0 0 30px var(--secondary-accent), 0 0 60px var(--accent-glow); }
+        }
+
+        /* --------------------------------- */
+        /* شريط التنقل (Navbar) والروابط النشطة */
+        /* --------------------------------- */
+        .navbar-container {
+            width: 95%; 
+            max-width: 1400px; 
+            margin: 20px auto 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; 
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary-accent); 
+            min-width: 170px; 
+            display: flex;
+            align-items: center;
+            gap: 5px; 
+            transition: font-size 0.3s;
+        }
+        .hexagon-icon {
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+        
+        nav {
+            flex-grow: 1; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px; 
+            padding: 8px 15px; 
+            border-radius: 50px; 
+            border: 1px solid rgba(0, 0, 0, 0.05); 
+            background-color: var(--split-nav-bg); 
+            transition: all 0.3s ease-in-out; 
+            backdrop-filter: blur(var(--glass-blur)); 
+            -webkit-backdrop-filter: blur(var(--glass-blur)); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem; 
+            padding: 5px 10px; 
+            margin: 0 3px; 
+            white-space: nowrap; 
+            transition: all 0.3s;
+            border-radius: 8px; 
+        }
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background-color: var(--nav-link-active-bg);
+            color: var(--nav-link-active-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .nav-links a.active {
+            background-color: var(--nav-link-active-bg);
+            color: var(--nav-link-active-color);
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar-container.scrolled-nav .nav-links,
+        .navbar-container.scrolled-nav .interaction-controls {
+            padding: 5px 10px; 
+            background-color: var(--split-nav-scrolled-bg); 
+        }
+        .navbar-container.scrolled-nav .logo {
+            font-size: 1.6rem;
+        }
+        
+        /* تنسيق شريط التحكم (اللغة/المظهر) */
+        .interaction-controls {
+            display: flex; 
+            align-items: center;
+            gap: 10px;
+            min-width: 100px; 
+            justify-content: flex-end;
+            padding: 5px 10px; 
+            border-radius: 50px; 
+            border: 1px solid rgba(0, 0, 0, 0.05); 
+            background-color: var(--split-nav-bg);
+            transition: all 0.3s ease-in-out; 
+            backdrop-filter: blur(var(--glass-blur)); 
+            -webkit-backdrop-filter: blur(var(--glass-blur)); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .mobile-controls {
+            display: none; 
+            align-items: center;
+            gap: 10px;
+        }
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 5px 8px; 
+            transition: background 0.3s;
+        }
+        .rotating {
+            animation: rotate 0.5s ease-in-out;
+            display: inline-block;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        /* زر الرجوع للأعلى (Scroll-to-Top) */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            z-index: 990;
+            width: 45px;
+            height: 45px;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s, box-shadow 0.3s; 
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-accent);
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
+            background-color: var(--primary-color); 
+        }
+
+        html[dir="ltr"] .scroll-to-top { right: 30px; left: auto; }
+        html[dir="rtl"] .scroll-to-top { left: 30px; right: auto; }
+
+        /* قائمة الهامبرغر والتفاعل في الموبايل */
+        #mobile-menu-btn {
+            display: none; 
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+        
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            width: 70%;
+            height: 100%;
+            z-index: 999;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            transform: translateX(100%); 
+            transition: transform 0.4s ease-out;
+            backdrop-filter: blur(var(--glass-blur)); 
+            -webkit-backdrop-filter: blur(var(--glass-blur)); 
+            background-color: var(--glass-bg); 
+            border-left: 1px solid var(--glass-border);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+            right: 0; 
+        }
+        .mobile-nav-overlay.open {
+            transform: translateX(0); 
+            display: flex;
+        }
+        .mobile-nav-overlay .nav-links {
+            flex-direction: column;
+            width: 100%;
+            margin-top: 50px; 
+            align-items: flex-start; 
+        }
+        .mobile-nav-overlay .nav-links a {
+            font-size: 1.1rem;
+            padding: 10px;
+            width: 90%; 
+            margin: 5px 0; 
+            border-radius: 8px;
+            text-align: left; 
+        }
+        
+        #close-menu-btn {
+            position: absolute;
+            top: 20px;
+            font-size: 1.5rem;
+        }
+        html[dir="ltr"] #close-menu-btn { left: 20px; right: auto; }
+        html[dir="rtl"] #close-menu-btn { right: 20px; left: auto; }
+        
+        .mobile-interactions {
+            display: none !important; 
+        }
+        
+        /* تنسيق الـ Footer */
+        .footer {
+            padding: 40px 5%;
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.1); 
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 5px;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .social-links a {
+            margin: 0 10px;
+        }
+
+        .footer-links {
+            margin-bottom: 10px;
+        }
+        
+
+        /* --------------------------------- */
+        /* تنسيقات قسم التواصل (Contact Section) */
+        /* --------------------------------- */
+        .contact-section {
+            padding-top: 50px;
+            padding-bottom: 100px;
+        }
+        .contact-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .contact-info,
+        .contact-form {
+            flex: 1 1 45%; 
+            min-width: 300px;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            background-color: var(--glass-bg); 
+            backdrop-filter: blur(var(--glass-blur));
+            box-shadow: var(--glass-shadow-soft);
+        }
+        .contact-info h3,
+        .contact-form h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+            font-size: 1.1rem;
+        }
+        .contact-detail i {
+            color: var(--secondary-accent);
+            font-size: 1.3rem;
+            width: 30px;
+            text-align: center;
+        }
+        .contact-social-links {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            font-size: 1.5rem;
+        }
+        .contact-social-links a {
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+        .contact-social-links a:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-color);
+            background-color: var(--glass-bg); 
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        textarea.input-field {
+            resize: vertical;
+            min-height: 150px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            border-radius: 8px;
+            background-image: linear-gradient(to right, var(--cta-gradient-start), var(--cta-gradient-end));
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--cta-hover-glow);
+        }
+
+
+        
+        /* --------------------------------- */
+        /* Success Modal Styling - Dynamic parts */
+        /* --------------------------------- */
+        .message-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .message-modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .message-modal-content {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-color);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .message-modal-overlay.show .message-modal-content {
+            transform: scale(1);
+            /* استخدام المتغيرات الجديدة من JS */
+            border-color: var(--modal-primary-color-light, var(--primary-color)); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), var(--modal-shadow-glow, 0 0 20px var(--primary-color));
+        }
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            /* استخدام المتغيرات الجديدة من JS */
+            color: var(--modal-primary-color, var(--primary-color));
+            transition: color 0.3s;
+        }
+        .message-modal-content h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+        .modal-close-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            /* استخدام المتغيرات الجديدة من JS */
+            background-color: var(--modal-primary-color, var(--primary-color));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .modal-close-btn:hover {
+             /* استخدام المتغيرات الجديدة من JS */
+            background-color: var(--modal-primary-color-hover, var(--cta-gradient-end));
+            transform: translateY(-2px);
+        }
+        /* --------------------------------- */
+        /* تنسيقات قسم الفريق (Media Section) (جديد) */
+        /* --------------------------------- */
+.media-section {
+        padding: 80px 0;
+        text-align: center;
+    }
+
+    .media-section h2 {
+        margin-bottom: 50px;
+    }
+
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .video-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        background-color: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(var(--glass-blur));
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-embed-container {
+        position: relative;
+        width: 100%;
+        /* نسبة العرض إلى الارتفاع 16:9 */
+        padding-top: 56.25%; 
+    }
+
+    .video-embed-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .video-caption {
+        padding: 15px 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    
+        /* --------------------------------- */
+        /* تنسيقات قسم الفريق (About Section) (جديد) */
+        /* --------------------------------- */
+.about-section {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.about-content-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* يسمح بالتعديل على الجوال */
+    gap: 50px;
+    align-items: flex-start; /* تبدأ العناصر من الأعلى */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-text-column {
+    flex: 2; /* تأخذ مساحة أكبر للنص */
+    min-width: 300px; 
+}
+
+.about-specs-column {
+    flex: 1; /* تأخذ مساحة أقل للمواصفات */
+    min-width: 280px;
+    /* لجعلها تبرز ككتلة واحدة */
+    border-radius: 20px;
+    padding: 25px;
+    background-color: var(--glass-bg-darker);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.2); 
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.1); /* فاصل خفيف */
+}
+
+.spec-item:last-child {
+    border-bottom: none; /* إزالة الفاصل الأخير */
+}
+
+.spec-item .label-group {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.spec-item .icon {
+    font-size: 1.2rem;
+    color: var(--secondary-accent);
+    margin-left: 10px;
+}
+
+.spec-item .value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    /* توهج الأرقام */
+    text-shadow: 0 0 3px var(--primary-color), 0 0 8px rgba(0, 191, 255, 0.5); 
+}
+
+/* تعديل عرض الجوال */
+@media (max-width: 768px) {
+    .about-content-wrapper {
+        flex-direction: column;
+    }
+    .about-specs-column {
+        min-width: 100%;
+        order: -1; /* لجعل لوحة البيانات تظهر أولاً على الجوال */
+    }
+}
+        /* --------------------------------- */
+        /* تنسيقات قسم الفريق (Team Section) (جديد) */
+        /* --------------------------------- */
+        .team-section {
+            padding-top: 50px;
+            padding-bottom: 100px;
+        }
+
+        .team-section h2 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .team-category {
+            margin-bottom: 60px;
+        }
+
+        .team-category h3 {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .team-category h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-accent);
+            border-radius: 2px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            background-color: var(--glass-bg); 
+            backdrop-filter: blur(var(--glass-blur));
+            box-shadow: var(--glass-shadow-soft);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden; 
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px var(--accent-glow);
+        }
+
+        .member-photo-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border: 4px solid var(--secondary-accent);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .member-photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .member-photo-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        .member-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .team-role {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        /* [جديد] Social Links Container (مخفي مبدئياً) */
+        .social-links-reveal {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1); 
+            
+            /* للتحكم في الإظهار والإخفاء */
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease, padding 0.4s ease, visibility 0.4s;
+        }
+
+        .social-links-reveal.show {
+            max-height: 50px; 
+            opacity: 1;
+            visibility: visible;
+            padding: 10px 0 0 0; 
+        }
+
+        .social-links-reveal a {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-links-reveal a:hover {
+            color: var(--primary-color);
+            transform: scale(1.15);
+        }
+         /* --------------------------------- */
+        /* تنسيقات قسم الجدول الزمني (DATA/Resources Section) */
+        /* --------------------------------- */
+.data-section {
+    padding-top: 50px;
+    padding-bottom: 100px;
+    text-align: center;
+}
+
+.data-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 60px;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.resource-grid {
+    display: grid;
+    /* تخطيط شبكي: يتكيف ليناسب 4 بطاقات على الشاشات الكبيرة */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.resource-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    border-radius: 20px;
+    /* استخدام تأثير الزجاجية */
+    border: 1px solid var(--glass-border);
+    background-color: var(--glass-bg); 
+    backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow-soft);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden; 
+}
+
+.resource-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 0 20px var(--accent-glow);
+}
+
+.resource-icon {
+    font-size: 3.5rem;
+    color: var(--secondary-accent);
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+
+.resource-card:hover .resource-icon {
+    color: var(--primary-color);
+}
+
+.resource-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.resource-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+.resource-card .cta-button {
+    margin-top: auto; /* يدفع الزر للأسفل لضمان التناسق */
+    padding: 10px 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+        /* --------------------------------- */
+        /* تنسيقات قسم الجدول الزمني (Tach Stack Section) */
+        /* --------------------------------- */
+        .tech-flow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap; /* إجباره على البقاء في سطر واحد على الشاشات الكبيرة */
+    gap: 20px; /* تصغير المسافة بين الدوائر */
+    margin-top: 60px;
+}
+
+/* عقدة الأداة الواحدة (The Node) - تم تصغيرها إلى 110px */
+.flow-node {
+    width: 110px; /* تصغير العرض */
+    height: 110px; /* تصغير الارتفاع */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: var(--glass-bg-darker);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+    position: relative;
+    transition: all 0.4s ease-in-out;
+    padding: 5px; /* تصغير الـ padding الداخلي */
+}
+.flow-node:hover {
+    /* إضافة الحركة لجعل العنصر "يطلع لبره" */
+    transform: scale(1.1); 
+    /* توهج نيون أقوى */
+    box-shadow: 0 0 30px var(--primary-color), 0 0 50px var(--accent-glow); 
+}
+/* ... (بقية تنسيقات .flow-node:hover كما هي) ... */
+
+
+.node-icon {
+    font-size: 1.8rem; /* تصغير الأيقونة قليلاً */
+    color: var(--secondary-accent);
+    margin-bottom: 3px;
+}
+
+.node-title {
+    font-size: 0.9rem; /* تصغير الخط */
+    font-weight: 700;
+    color: var(--text-color); 
+    line-height: 1.2;
+}
+
+.node-subtitle {
+    font-size: 0.75rem; /* تصغير الخط */
+    opacity: 0.7;
+    margin-top: 2px;
+}
+
+/* موصل التدفق بين العناصر - تم تصغيره قليلاً */
+.connector {
+    width: 25px; /* تقصير طول الموصل */
+    height: 3px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+}
+
+/* تحديث: السماح بتعدد الأسطر على الشاشات الصغيرة */
+@media (max-width: 992px) {
+    .tech-flow {
+        flex-wrap: wrap; 
+        gap: 30px;
+    }
+    .connector {
+        display: none;
+    }
+}
+          /* --------------------------------- */
+        /* تنسيقات قسم الجدول الزمني (How It Works Section) */
+        /* --------------------------------- */
+.glass-card {
+    /* خصائص الـ Glassmorphism */
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow-soft);
+}
+
+.feature-grid {
+    display: grid;
+    /* توزيع متساوٍ للبطاقات مع الحد الأدنى للعرض 280 بكسل */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 0 50px;
+}
+
+.feature-card {
+    padding: 30px;
+    text-align: center;
+    border-radius: 15px;
+    /* إضافة انتقال سلس للمسة الجمالية عند التفاعل */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: var(--text-color);
+}
+
+/* تأثير التفاعل (Hover) */
+.feature-card:hover {
+    transform: translateY(-8px); /* ارتقاء خفيف للبطاقة */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* ظل أوضح */
+}
+
+.feature-card .icon {
+    font-size: 3.2rem;
+    color: var(--primary-color); /* لون أساسي لتمييز الأيقونات */
+    margin-bottom: 20px;
+    display: block;
+    /* لمسة توهج خفيفة للأيقونات */
+    text-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.5);
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.feature-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+/* التعديلات على شاشات الموبايل */
+@media (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: 1fr; /* عرض عمود واحد على الموبايل */
+        padding: 0 20px;
+    }
+}
+/* --------------------------------- */
+/* تنسيقات القسم المستقبلي (Future/Sci-Fi) */
+/* --------------------------------- */
+.future-section { /* أو استخدام #future مباشرة */
+    /* لجعل الخلفية أغمق قليلاً وتناسب التوهج في الوضع الليلي */
+    background-color: var(--dynamic-bg-color1); 
+    position: relative;
+    overflow: hidden;
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+/* تأثير شبكي خفيف (Grid/Circuit Look) للخلفية */
+.future-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* خطوط شبكية نيون خفيفة */
+    background-image: 
+        repeating-linear-gradient(0deg, var(--accent-glow) 0, transparent 1px, transparent 50px),
+        repeating-linear-gradient(90deg, var(--accent-glow) 0, transparent 1px, transparent 50px);
+    background-size: 50px 50px;
+    opacity: 0.05; /* توهج خفيف جداً */
+    pointer-events: none;
+    transition: opacity 0.5s;
+}
+
+/* توهج العنوان الرئيسي للقسم */
+.future-section .section-title {
+    color: var(--primary-color);
+    /* توهج نيون للنص */
+    text-shadow: 0 0 10px var(--accent-glow), 0 0 20px rgba(0, 191, 255, 0.4);
+    transition: text-shadow 0.4s;
+}
+
+/* تنسيق البطاقات - Glow Effect */
+.future-section .feature-card {
+    /* جعل الإطار بلون التوهج وتوهج خفيف دائم */
+    border: 1px solid var(--primary-color); 
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.3), var(--glass-shadow-soft);
+    transition: all 0.4s ease-in-out;
+}
+
+/* توهج الأيقونة في الوضع العادي */
+.future-section .feature-card .icon {
+    color: var(--secondary-accent);
+    text-shadow: 0 0 5px var(--secondary-accent);
+    transition: all 0.4s ease-in-out;
+}
+
+/* توهج أقوى للبطاقة والأيقونة عند التمرير */
+.future-section .feature-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 0 30px var(--primary-color), 0 0 60px var(--accent-glow);
+}
+
+.future-section .feature-card:hover .icon {
+    color: var(--primary-color);
+    text-shadow: 0 0 10px var(--primary-color), 0 0 30px var(--accent-glow);
+}
+        /* --------------------------------- */
+        /* تنسيقات قسم الجدول الزمني (Timeline Section) */
+        /* --------------------------------- */
+        .timeline-section {
+            padding-top: 50px;
+            padding-bottom: 100px;
+            text-align: center;
+        }
+
+        .timeline-container {
+            position: relative;
+            display: flex;
+            flex-direction: column; 
+            gap: 40px; 
+            padding: 50px 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 8px; /* سمك السهم */
+            background: linear-gradient(to bottom, var(--secondary-accent), var(--primary-color));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* بداية السهم (Mechanical Design) - دائرة */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--secondary-accent);
+            border: 4px solid var(--bg-light-end); 
+            box-shadow: 0 0 15px var(--secondary-accent);
+            z-index: 10;
+        }
+        
+        /* نهاية السهم (Final Demo) - رأس سهم */
+        .timeline-line::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg); /* تدوير لجعلها رأس سهم */
+            width: 25px; 
+            height: 25px;
+            background-color: var(--primary-color);
+            border-top: 4px solid var(--bg-light-end);
+            border-right: 4px solid var(--bg-light-end);
+            box-shadow: 0 0 15px var(--primary-color);
+            z-index: 10;
+            border-radius: 0 5px 0 0;
+        }
+
+        .timeline-card-wrapper {
+            position: relative;
+            z-index: 20; 
+        }
+        
+        .timeline-card {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow-soft);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            margin-left: 55%; 
+            width: 45%; 
+        }
+
+        /* تنسيقات البطاقات التي على اليمين (Ltr) أو اليسار (Rtl) */
+        html[dir="rtl"] .timeline-card {
+            margin-left: 0;
+            margin-right: 55%;
+        }
+
+        .timeline-card-wrapper:nth-child(even) .timeline-card {
+            margin-left: 0;
+            margin-right: 55%;
+        }
+        html[dir="rtl"] .timeline-card-wrapper:nth-child(even) .timeline-card {
+            margin-left: 55%;
+            margin-right: 0;
+        }
+
+        /* الدائرة على الخط المركزي لكل بطاقة */
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 5px solid var(--bg-light-end); 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        /* تحديد موقع الدائرة (Ltr) */
+        .timeline-card::before {
+            right: -60px; 
+        }
+        .timeline-card-wrapper:nth-child(even) .timeline-card::before {
+            left: -60px;
+            right: auto;
+        }
+        /* تحديد موقع الدائرة (Rtl) */
+        html[dir="rtl"] .timeline-card::before {
+            left: -60px;
+            right: auto;
+        }
+        html[dir="rtl"] .timeline-card-wrapper:nth-child(even) .timeline-card::before {
+            right: -60px;
+            left: auto;
+        }
+
+
+        .timeline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px var(--accent-glow);
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .timeline-header h4 {
+            flex-grow: 1;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .timeline-icon {
+            font-size: 1.5rem;
+            color: var(--secondary-accent);
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-card.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .timeline-details {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding-top: 0;
+            margin-top: 10px;
+            border-top: 1px solid transparent;
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease, padding-top 0.5s ease, border-top 0.5s ease;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .timeline-card.expanded {
+            /* تأثير الطول عند التوسيع (تمدد الكارت) */
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px var(--cta-hover-glow);
+        }
+        
+        .timeline-card.expanded .timeline-details {
+            max-height: 300px; /* قيمة كبيرة بما يكفي ليتسع النص */
+            opacity: 1;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+
+  
+    </style>
+
 </head>
-<body>
+<body lang="en" dir="ltr">
+    
+    <div class="cursor-glow"></div>
 
-<!-- HEADER -->
-<header>
-  <div class="nav-inner">
-    <div class="brand" aria-hidden="false">
-      <img src="https://via.placeholder.com/140x48.png?text=Hexapod+Logo" alt="Hexapod logo">
-      <h1>Hexapod Robot Project</h1>
+    <button class="scroll-to-top" id="scroll-to-top-btn" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <div class="mobile-nav-overlay">
+        <button id="close-menu-btn" class="control-btn"><i class="fas fa-times"></i></button>
+        <div class="nav-links">
+            <a href="#home" data-ar="الرئيسية" data-en="HOME" class="nav-link active">HOME</a>
+            <a href="#about" data-ar="عن المشروع" data-en="ABOUT" class="nav-link">ABOUT</a>
+            <a href="#features" data-ar="المميزات" data-en="FEATURES" class="nav-link">FEATURES</a>
+            <a href="#data" data-ar="البيانات" data-en="DATA" class="nav-link">DATA</a>
+            <a href="#howitworks" data-ar="آلية العمل" data-en="HOW IT WORKS" class="nav-link">HOW IT WORKS</a>
+            <a href="#timeline" data-ar="الجدول الزمني" data-en="TIMELINE" class="nav-link">TIMELINE</a>
+            <a href="#techstack" data-ar="التقنيات" data-en="TECH STACK" class="nav-link">TECH STACK</a>
+            <a href="#media" data-ar="الوسائط" data-en="MEDIA" class="nav-link">MEDIA</a>
+            <a href="#team" data-ar="الفريق" data-en="TEAM" class="nav-link">TEAM</a>
+            <a href="#contact" data-ar="اتصل بنا" data-en="CONTACT" class="nav-link">CONTACT</a>
+        </div>
+        <div class="mobile-interactions">
+            </div>
+    </div>
+    
+    <div class="navbar-container">
+        <button id="mobile-menu-btn" class="control-btn"><i class="fas fa-bars"></i></button>
+
+        <div class="logo">
+            <i class="fas fa-hexagon hexagon-icon"></i>
+            <span id="logo-text" data-ar="Hexapod-Robot" data-en="Hexapod-Robot">Hexapod-Robot</span>
+        </div>
+
+        <nav>
+            <div class="nav-links">
+                <a href="#home" data-ar="الرئيسية" data-en="HOME" class="nav-link active">HOME</a>
+                <a href="#about" data-ar="عن المشروع" data-en="ABOUT" class="nav-link">ABOUT</a>
+                <a href="#features" data-ar="المميزات" data-en="FEATURES" class="nav-link">FEATURES</a>
+                <a href="#data" data-ar="البيانات" data-en="DATA" class="nav-link">DATA</a>
+                <a href="#howitworks" data-ar="آلية العمل" data-en="HOW IT WORKS" class="nav-link">HOW IT WORKS</a>
+                <a href="#timeline" data-ar="الجدول الزمني" data-en="TIMELINE" class="nav-link">TIMELINE</a>
+                <a href="#techstack" data-ar="التقنيات" data-en="TECH STACK" class="nav-link">TECH STACK</a>
+                <a href="#media" data-ar="الوسائط" data-en="MEDIA" class="nav-link">MEDIA</a>
+                <a href="#team" data-ar="الفريق" data-en="TEAM" class="nav-link">TEAM</a>
+                <a href="#contact" data-ar="اتصل بنا" data-en="CONTACT" class="nav-link">CONTACT</a>
+            </div>
+        </nav>
+
+        <div class="interaction-controls">
+            <button class="control-btn" id="lang-toggle" data-current="en">
+                <span data-ar="EN" data-en="AR">AR</span>
+            </button>
+            <button class="control-btn" id="theme-toggle">
+                <span id="theme-icon">☀</span>
+            </button>
+        </div>
+        
+        <div class="mobile-controls">
+            <button class="control-btn" id="mobile-lang-toggle" data-current="en" aria-label="Toggle language">
+                <span data-ar="EN" data-en="AR">AR</span>
+            </button>
+            <button class="control-btn" id="mobile-theme-toggle" aria-label="Toggle theme">
+                <span id="mobile-theme-icon">☀</span>
+            </button>
+        </div>
     </div>
 
-    <nav aria-label="Primary">
-      <button class="burger" onclick="toggleMobileNav()">☰</button>
-      <ul id="mainNav" role="menubar">
-        <li><a class="active" data-target="home">Home</a></li>
-        <li><a data-target="about">About</a></li>
-        <li><a data-target="features">Features</a></li>
-        <li><a data-target="components">Components</a></li>
-        <li><a data-target="how">How it Works</a></li>
-        <li><a data-target="timeline">Timeline</a></li>
-        <li><a data-target="tech">Tech Stack</a></li>
-        <li><a data-target="media">Media</a></li>
-        <li><a data-target="team">Team</a></li>
-        <li><a data-target="contact">Contact</a></li>
-      </ul>
-    </nav>
+    <section class="hero-section" id="home">
+        <div class="text-content">
+            <h1 data-ar="روبوت Hexapod-Robot: ستة أرجل، رؤية واحدة" data-en="Hexapod-Robot: Six Legs, One Vision">
+                Hexapod-Robot: Six Legs, One Vision
+            </h1>
+            <p data-ar="مشروع جامعي متقدم يهدف لاستكشاف وتطبيق الذكاء الاصطناعي على منصات الروبوتات سداسية الأرجل، مما يمثل الجيل القادم من الاستكشاف والرصد الآلي." data-en="An advanced university project aiming to explore and apply AI on six-legged robotics platforms, representing the next generation of automated exploration and monitoring.">
+                An advanced university project aiming to explore and apply AI on six-legged robotics platforms, representing the next generation of automated exploration and monitoring.
+            </p>
+            <button class="cta-button" data-ar="اكتشف حلولنا" data-en="Explore Our Solutions">
+                Explore Our Solutions
+            </button>
+        </div>
+        </div>
+        </a>
+    </section>
 
-    <div class="controls">
-      <button class="home-btn" id="showAllBtn" title="Show All Sections">Show All</button>
-      <button class="theme-btn" id="themeToggle" aria-pressed="false" title="Toggle Theme (Sun / Moon)">
-        <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4M12 7a5 5 0 100 10 5 5 0 000-10z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+    <section id="about" style="text-align: center;">
+        <h2 class="section-title text-center mb-10">
+        <span data-en="Project Architecture Overview" data-ar="نظرة عامة على معمارية المشروع">نظرة عامة على معمارية المشروع</span>
+    </h2>
+
+    <div class="about-content-wrapper container">
+
+        <div class="about-specs-column">
+            <h3 class="text-center" style="margin-bottom: 25px; color: var(--secondary-accent);" data-ar="المواصفات التقنية" data-en="Technical Specifications">المواصفات التقنية</h3>
+            
+            <div class="spec-item">
+                <div class="label-group">
+                    <i class="fas fa-microchip icon"></i> 
+                    <span data-ar="المحركات النشطة" data-en="Actuators">المحركات النشطة</span>
+                </div>
+                <div class="value">18</div>
+            </div>
+
+            <div class="spec-item">
+                <div class="label-group">
+                    <i class="fas fa-bolt icon"></i> 
+                    <span data-ar="جهد النظام" data-en="System Voltage">جهد النظام</span>
+                </div>
+                <div class="value">12.6V</div>
+            </div>
+
+            <div class="spec-item">
+                <div class="label-group">
+                    <i class="fas fa-wifi icon"></i> 
+                    <span data-ar="قوة الإشارة" data-en="Signal Strength">قوة الإشارة</span>
+                </div>
+                <div class="value">-53 dBm</div>
+            </div>
+
+            <div class="spec-item">
+                <div class="label-group">
+                    <i class="fas fa-thermometer-half icon"></i> 
+                    <span data-ar="درجة حرارة التشغيل" data-en="Temperature">درجة حرارة التشغيل</span>
+                </div>
+                <div class="value">38.7°C</div>
+            </div>
+            
+        </div>
+        
+        <div class="about-text-column">
+            <h3 style="color: var(--primary-color); font-size: 1.8rem; margin-bottom: 20px;" data-ar="منصة البحث السداسية" data-en="The Six-Legged Research Platform">منصة البحث السداسية</h3>
+            
+            <p style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.7;">
+                <span data-en="The Hexapod Robot Project is a robust, six-legged platform specifically engineered for advanced research in dynamic locomotion, autonomous vision, and modular expansion. The architecture is built for maximum resilience." data-ar="روبوت هيكسابود هو منصة بحثية سداسية الأرجل، مصممة خصيصاً للحركة القوية والرؤية في الوقت الفعلي والتوسع المعياري. هذه المنصة القابلة للتخصيص تعد أساساً مثالياً للتجارب الروبوتية المتقدمة.">
+                    روبوت هيكسابود هو منصة بحثية سداسية الأرجل، مصممة خصيصاً للحركة القوية والرؤية في الوقت الفعلي والتوسع المعياري. هذه المنصة القابلة للتخصيص تعد أساساً مثالياً للتجارب الروبوتية المتقدمة.
+                </span>
+            </p>
+            
+            <p style="font-size: 1rem; opacity: 0.8; line-height: 1.7;">
+                <span data-en="Each leg features multiple actuated joints, enabling the generation of complex gaits necessary for stable traversal across diverse and rough terrains. The control heart is an STM32-based system, driving 18 servos via PCA9685 boards for scalable, precise actuation. The integration of ESP32-CAM provides essential visual data through real-time streaming." data-ar="تعتمد المنصة على نظام تحكم مركزي STM32، وتدير 18 مفصلاً نشطاً عبر مشغلات PCA9685 لزيادة كفاءة المحركات. يشتمل التصميم على وحدة ESP32-CAM للرؤية والبث المباشر.">
+                    تعتمد المنصة على نظام تحكم مركزي STM32، وتدير 18 مفصلاً نشطاً عبر مشغلات PCA9685 لزيادة كفاءة المحركات. يشتمل التصميم على وحدة ESP32-CAM للرؤية والبث المباشر.
+                </span>
+            </p>
+            
+        </div>
+
     </div>
-  </div>
-</header>
+    </section>
 
-<!-- HERO -->
-<section class="hero" id="home" aria-label="Hero">
-  <div class="bg-overlay"></div>
-  <div class="neon-grid" aria-hidden="true"></div>
-  <div class="rings" aria-hidden="true"><div class="ring r1"></div><div class="ring r2"></div></div>
+    <section id="features" style="text-align: center;">
+        <h2 class="section-title text-center mb-12">
+        <span data-en="Future Capabilities & Roadmap" data-ar="رؤية المستقبل وقدرات الروبوت المتقدمة">رؤية المستقبل وقدرات الروبوت المتقدمة</span>
+    </h2>
+    <p class="text-center" style="max-width: 800px; margin: 0 auto 50px; font-size: 1.1rem; opacity: 0.8;" 
+        data-en="The Hexapod is designed with scalability in mind, ready to integrate advanced features and hardware components." 
+        data-ar="تم تصميم روبوت هيكسابود مع وضع قابلية التوسع في الاعتبار، ليصبح جاهزاً لدمج الميزات المتقدمة والمكونات العتادية المستقبلية.">
+        تم تصميم روبوت هيكسابود مع وضع قابلية التوسع في الاعتبار، ليصبح جاهزاً لدمج الميزات المتقدمة والمكونات العتادية المستقبلية.
+    </p>
 
-  <div class="viewer" id="viewer" role="img" aria-label="Interactive hexapod view">
-    <div class="imageWrap" id="imageWrap" title="Drag to rotate">
-      <!-- temporary placeholder images as requested -->
-      <img id="imgA" src="https://via.placeholder.com/1200x675.png?text=Hexapod+View+A" alt="Hexapod angle A" style="opacity:1;transform:rotateY(0deg) scale(1)">
-      <img id="imgB" src="https://via.placeholder.com/1200x675.png?text=Hexapod+View+B" alt="Hexapod angle B" style="opacity:0;transform:rotateY(10deg) scale(1.02)">
+    <div class="feature-grid">
+        
+        <div class="feature-card glass-card">
+            <i class="fas fa-walking icon"></i> 
+            <h3 data-en="Dynamic Multi-Gait System" data-ar="أنظمة حركة ذكية">أنظمة حركة ذكية</h3>
+            <p data-en="Advanced control featuring Tripod, Ripple, and Wave gaits to maximize stability and efficiency across diverse terrains." data-ar="نظام متقدم للحركة متعددة الأطوار يشمل مشيات ثلاثية، تموجية، وموجية، لضمان الثبات والكفاءة في مختلف التضاريس.">
+                نظام متقدم للحركة متعددة الأطوار يشمل مشيات ثلاثية، تموجية، وموجية، لضمان الثبات والكفاءة في مختلف التضاريس.
+            </p>
+        </div>
+        
+        <div class="feature-card glass-card">
+            <i class="fas fa-video icon"></i> 
+            <h3 data-en="High-Definition Live Feed" data-ar="بث مباشر">بث مباشر</h3>
+            <p data-en="Real-time, high-quality video streaming via ESP32-CAM, enabling precise remote piloting and instantaneous inspection tasks." data-ar="يوفر وحدة ESP32-CAM بثاً مباشراً عالي الجودة لمهام القيادة عن بُعد، والمراقبة، والفحص الفوري.">
+                يوفر وحدة ESP32-CAM بثاً مباشراً عالي الجودة لمهام القيادة عن بُعد، والمراقبة، والفحص الفوري.
+            </p>
+        </div>
+        
+        <div class="feature-card glass-card">
+            <i class="fas fa-balance-scale-left icon"></i> 
+            <h3 data-en="Real-time Posture Compensation" data-ar="توازن تكيفي">توازن تكيفي</h3>
+            <p data-en="Utilizing IMU and advanced sensor feedback for automatic posture correction and robust stability control on uneven surfaces." data-ar="استخدام مستشعرات IMU لتعويض الميول والتحكم التلقائي بوضعية الجسم لضمان الثبات الكامل على الأسطح غير المستوية.">
+                استخدام مستشعرات IMU لتعويض الميول والتحكم التلقائي بوضعية الجسم لضمان الثبات الكامل على الأسطح غير المستوية.
+            </p>
+        </div>
+        
+        <div class="feature-card glass-card">
+            <i class="fas fa-layer-group icon"></i> 
+            <h3 data-en="Flexible Modular Architecture" data-ar="منصة وحداتية مرنة">منصة وحداتية مرنة</h3>
+            <p data-en="A standardized interface allowing easy integration of advanced sensors (LiDAR, Ultrasonic) or supplementary compute modules for research." data-ar="تصميم معياري يتيح إضافة سهلة وسريعة لمستشعرات متقدمة (مثل LiDAR والموجات فوق الصوتية)، أو وحدات معالجة إضافية للتجارب البحثية.">
+                تصميم معياري يتيح إضافة سهلة وسريعة لمستشعرات متقدمة (مثل LiDAR والموجات فوق الصوتية)، أو وحدات معالجة إضافية للتجارب البحثية.
+            </p>
+        </div>
+
     </div>
-    <div class="caption">Interactive 3D-like view — drag to rotate</div>
-  </div>
+    </section>
 
-  <h2 id="siteTitle">HEXAPOD ROBOT</h2>
-  <p class="lead">Six Legs. One Vision. A research and exploration hexapod built with STM32, ESP32-CAM and a modular sensor suite.</p>
+    <section id="data" style="text-align: center;">
+        <h2 data-ar="مركز الموارد الهندسية" data-en="Data">مركز الموارد الهندسية</h2>
+    
+    <div class="resource-grid">
+        
+        <div class="resource-card">
+            <i class="fas fa-cube resource-icon"></i>
+            <h3 data-ar="التصميم الميكانيكي" data-en="Mechanical Design">التصميم الميكانيكي</h3>
+            <p data-ar="ملفات CAD ثلاثية الأبعاد (Fusion 360) وملفات STL جاهزة للطباعة لإعادة إنتاج هيكل الروبوت." data-en="3D CAD files (Fusion 360) and ready-to-print STL files for reproducing the robot's structure.">ملفات CAD ثلاثية الأبعاد (Fusion 360) وملفات STL جاهزة للطباعة لإعادة إنتاج هيكل الروبوت.</p>
+            <a href="رابط_ملفات_CAD.zip" target="_blank" class="cta-button" data-ar="تحميل ملفات التصميم" data-en="DOWNLOAD CAD FILES">تحميل ملفات التصميم</a>
+        </div>
 
-  <div class="hero-cta">
-    <button class="btn btn-primary" data-scroll="about">Start Exploring</button>
-    <button class="btn btn-outline" data-scroll="features">Learn More</button>
-  </div>
+        <div class="resource-card">
+            <i class="fas fa-code resource-icon"></i>
+            <h3 data-ar="الكود والمتحكمات" data-en="Code & Controllers">الكود والمتحكمات</h3>
+            <p data-ar="الوصول الكامل إلى الكود المصدري للحركة والتحكم (مثل خوارزميات IK) والمخصص لمنصة الأردوينو." data-en="Full access to the source code for movement and control (e.g., IK algorithms) customized for the Arduino platform.">الوصول الكامل إلى الكود المصدري للحركة والتحكم (مثل خوارزميات IK) والمخصص لمنصة الأردوينو.</p>
+            <a href="رابط_مستودع_GitHub" target="_blank" class="cta-button" data-ar="عرض الكود (GitHub)" data-en="VIEW CODE (GitHub)">عرض الكود (GitHub)</a>
+        </div>
 
-  <div class="small-note">Tip: drag sideways or use left/right arrows — click nav to focus a section full-screen.</div>
+        <div class="resource-card">
+            <i class="fas fa-list-ul resource-icon"></i>
+            <h3 data-ar="قائمة المكونات (BOM)" data-en="Bill of Materials (BOM)">قائمة المكونات (BOM)</h3>
+            <p data-ar="قائمة تفصيلية بجميع المكونات الإلكترونية والميكانيكية الأساسية اللازمة لبناء الروبوت." data-en="A detailed list of all essential electronic and mechanical components required to build the robot.">قائمة تفصيلية بجميع المكونات الإلكترونية والميكانيكية الأساسية اللازمة لبناء الروبوت.</p>
+            <a href="رابط_ملف_BOM.xlsx" target="_blank" class="cta-button" data-ar="تنزيل قائمة القطع" data-en="DOWNLOAD BOM">تنزيل قائمة القطع</a>
+        </div>
+
+        <div class="resource-card">
+            <i class="fas fa-wrench resource-icon"></i>
+            <h3 data-ar="دليل التجميع" data-en="Assembly Guide">دليل التجميع</h3>
+            <p data-ar="تعليمات تفصيلية خطوة بخطوة، مصورة أو بفيديو، لفك وتجميع أجزاء الروبوت بشكل سليم." data-en="Step-by-step instructions, illustrated or video-based, for correctly assembling and disassembling the robot parts.">تعليمات تفصيلية خطوة بخطوة، مصورة أو بفيديو، لفك وتجميع أجزاء الروبوت بشكل سليم.</p>
+            <a href="رابط_صفحة_التجميع" target="_blank" class="cta-button" data-ar="مشاهدة الدليل" data-en="VIEW GUIDE">مشاهدة الدليل</a>
+        </div>
+
+    </div> </section>
+
+    <section id="howitworks" style="text-align: center;">
+        <div class="container mx-auto px-4">
+        <h2 class="section-title text-center mb-12">
+            <span data-en="How It Works" data-ar="كيف يعمل الروبوت">كيف يعمل الروبوت</span>
+        </h2>
+
+        <div class="feature-grid">
+            
+            <div class="feature-card glass-card">
+                <i class="fas fa-microchip icon"></i> 
+                <h3 data-en="Motion Control" data-ar="التحكم بالحركة">Motion Control</h3>
+                <p data-en="Inverse kinematics compute each leg's joint angles; trajectories are executed with PWM-synced servo control." data-ar="تحسب الميكانيكا العكسية زوايا مفاصل كل ساق؛ ويتم تنفيذ المسارات بتحكم مُتزامن للمُحركات عبر تقنية PWM.">
+                    Inverse kinematics compute each leg's joint angles; trajectories are executed with PWM-synced servo control.
+                </p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <i class="fas fa-eye icon"></i> 
+                <h3 data-en="Perception" data-ar="الإدراك والمُستشعرات">Perception</h3>
+                <p data-en="ESP32-CAM provides a live feed; additional sensors (IMU, ultrasonic) provide environment and orientation data." data-ar="توفر كاميرا ESP32-CAM بثاً مباشراً؛ وتوفر مُستشعرات إضافية (IMU، وموجات فوق صوتية) بيانات البيئة والاتجاه.">
+                    ESP32-CAM provides a live feed; additional sensors (IMU, ultrasonic) provide environment and orientation data.
+                </p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <i class="fas fa-wifi icon"></i> 
+                <h3 data-en="Wireless Control" data-ar="التحكم اللاسلكي">Wireless Control</h3>
+                <p data-en="Control via mobile app or web UI — switching gaits, camera view and movement commands in real time." data-ar="التحكم عبر تطبيق الهاتف أو واجهة الويب — تبديل أنماط المشي، وعرض الكاميرا، وأوامر الحركة في الوقت الفعلي.">
+                    Control via mobile app or web UI — switching gaits, camera view and movement commands in real time.
+                </p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <i class="fas fa-brain icon"></i> 
+                <h3 data-en="AI Upgrades" data-ar="تطويرات الذكاء الاصطناعي">AI Upgrades</h3>
+                <p data-en="Optional computer vision for object tracking and basic obstacle avoidance (future integration)." data-ar="رؤية حاسوبية اختيارية لتتبع الأجسام والتجنب الأساسي للعوائق (تكامل مُستقبلي).">
+                    Optional computer vision for object tracking and basic obstacle avoidance (future integration).
+                </p>
+            </div>
+            
+        </div>
+    </div>  </section>
+
+    <section id="timeline" class="timeline-section">
+    <h2 data-ar="الجدول الزمني" data-en="TIMELINE">TIMELINE</h2>
+    
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+        
+        <div class="timeline-card-wrapper" data-phase="mechanical">
+            <div class="timeline-card">
+                <div class="timeline-header">
+                    <i class="fas fa-drafting-compass timeline-icon"></i>
+                    <h4 data-ar="التصميم الميكانيكي" data-en="Mechanical Design">Mechanical Design</h4>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="timeline-details" data-ar="يركز على تصميم الهيكل المادي للروبوت، بما في ذلك هندسة الأرجل، والإطار الرئيسي للجسم، واختيار محركات السيرفو المناسبة وتوزيع الوزن الأمثل لضمان الاستقرار والمرونة في التضاريس الصعبة." data-en="Focuses on designing the robot's physical structure, including leg geometry, main body frame, selection of appropriate servo motors, and optimal weight distribution to ensure stability and flexibility in challenging terrains.">
+                    Focuses on designing the robot's physical structure, including leg geometry, main body frame, selection of appropriate servo motors, and optimal weight distribution to ensure stability and flexibility in challenging terrains.
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-card-wrapper" data-phase="electronics">
+            <div class="timeline-card">
+                <div class="timeline-header">
+                    <i class="fas fa-microchip timeline-icon"></i>
+                    <h4 data-ar="الكهرباء والتوصيلات" data-en="Electronics & Wiring">Electronics & Wiring</h4>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="timeline-details" data-ar="تكامل لوحات التحكم الدقيقة (Microcontrollers) مثل Raspberry Pi أو Arduino، وربطها بمحركات السيرفو، والمستشعرات المختلفة (مثل مستشعر المسافة والميلان)، وضمان تزويدها بالطاقة اللازمة بطريقة فعالة وآمنة." data-en="Integration of microcontrollers like Raspberry Pi or Arduino, connecting them to servo motors, various sensors (such as distance and tilt sensors), and ensuring efficient and safe power supply.">
+                    Integration of microcontrollers like Raspberry Pi or Arduino, connecting them to servo motors, various sensors (such as distance and tilt sensors), and ensuring efficient and safe power supply.
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-card-wrapper" data-phase="kinematics">
+            <div class="timeline-card">
+                <div class="timeline-header">
+                    <i class="fas fa-running timeline-icon"></i>
+                    <h4 data-ar="البرمجة الحركية وأساليب المشي" data-en="Kinematics & Gait Programming">Kinematics & Gait Programming</h4>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="timeline-details" data-ar="تطوير الخوارزميات الحركية العكسية (Inverse Kinematics) للتحكم الدقيق في موضع كل قدم، وبرمجة أنماط المشي المختلفة (Tri-pod, Wave, Ripple) التي تمكن الروبوت من الحركة المتوازنة والفعالة." data-en="Developing Inverse Kinematics algorithms for precise control over each foot position, and programming different gait patterns (Tri-pod, Wave, Ripple) that allow the robot balanced and efficient movement.">
+                    Developing Inverse Kinematics algorithms for precise control over each foot position, and programming different gait patterns (Tri-pod, Wave, Ripple) that allow the robot balanced and efficient movement.
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-card-wrapper" data-phase="ai-vision">
+            <div class="timeline-card">
+                <div class="timeline-header">
+                    <i class="fas fa-eye timeline-icon"></i>
+                    <h4 data-ar="تكامل الذكاء الاصطناعي والرؤية" data-en="AI & Vision Integration">AI & Vision Integration</h4>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="timeline-details" data-ar="دمج وحدة الكاميرا وبرمجة خوارزميات رؤية حاسوبية (Computer Vision) مثل تتبع الأجسام (Object Tracking) أو التعرف على الأجسام (Object Recognition) باستخدام نماذج التعلم العميق (Deep Learning) لتوجيه الروبوت بشكل مستقل." data-en="Integrating the camera module and programming Computer Vision algorithms like Object Tracking or Object Recognition using Deep Learning models to guide the robot autonomously.">
+                    Integrating the camera module and programming Computer Vision algorithms like Object Tracking or Object Recognition using Deep Learning models to guide the robot autonomously.
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-card-wrapper" data-phase="testing">
+            <div class="timeline-card">
+                <div class="timeline-header">
+                    <i class="fas fa-bug timeline-icon"></i>
+                    <h4 data-ar="الاختبار والتحسين" data-en="Testing & Optimization">Testing & Optimization</h4>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="timeline-details" data-ar="إجراء اختبارات مكثفة على جميع الأنظمة الفرعية (الحركة، الاستشعار، الرؤية) في بيئات محاكاة وحقيقية، وتحديد نقاط الضعف وتحسين الأداء لضمان موثوقية الروبوت وقدرته على التعامل مع التحديات البيئية المختلفة." data-en="Conducting extensive tests on all subsystems (motion, sensing, vision) in simulated and real environments, identifying weaknesses, and optimizing performance to ensure the robot's reliability and ability to handle various environmental challenges.">
+                    Conducting extensive tests on all subsystems (motion, sensing, vision) in simulated and real environments, identifying weaknesses, and optimizing performance to ensure the robot's reliability and ability to handle various environmental challenges.
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-card-wrapper" data-phase="demo">
+            <div class="timeline-card">
+                <div class="timeline-header">
+                    <i class="fas fa-flag-checkered timeline-icon"></i>
+                    <h4 data-ar="العرض النهائي" data-en="Final Demonstration">Final Demonstration</h4>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="timeline-details" data-ar="عرض الروبوت النهائي وقدرته على تنفيذ المهام المحددة بنجاح، بما في ذلك الحركة المستقلة وتجنب العوائق وتطبيق وظيفة الرؤية الحاسوبية الرئيسية للمشروع." data-en="Presenting the final robot and its ability to successfully execute specified tasks, including autonomous movement, obstacle avoidance, and the implementation of the project's main computer vision function.">
+                    Presenting the final robot and its ability to successfully execute specified tasks, including autonomous movement, obstacle avoidance, and the implementation of the project's main computer vision function.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+    
+    <section id="techstack" style="text-align: center;">
+        <h2 class="section-title text-center mb-4">
+        <span data-ar="المكدس التقني ومسار العمل" data-en="Tech Stack & Workflow">المكدس التقني ومسار العمل</span>
+    </h2>
+    <p class="text-center" style="max-width: 800px; margin: 0 auto 50px; font-size: 1.1rem; opacity: 0.8;" 
+        data-ar="تكامل مثالي بين العتاد (Hardware)، والبرامج الثابتة (Firmware)، والبرمجيات (Software)، لضمان الأداء الأمثل." data-en="Seamless integration between hardware, firmware, and software components for optimal performance.">
+        تكامل مثالي بين العتاد (Hardware)، والبرامج الثابتة (Firmware)، والبرمجيات (Software)، لضمان الأداء الأمثل.
+    </p>
+
+    <div class="tech-flow">
+        
+        <div class="flow-node">
+            <i class="fas fa-drafting-compass node-icon"></i>
+            <span class="node-title">SolidWorks</span>
+            <span class="node-subtitle">CAD & Modeling</span>
+        </div>
+
+        <div class="connector"></div>
+        
+        <div class="flow-node">
+            <i class="fas fa-microchip node-icon"></i>
+            <span class="node-title">STM32</span>
+            <span class="node-subtitle">C++</span>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="flow-node">
+            <i class="fas fa-wifi node-icon"></i>
+            <span class="node-title">ESP32</span>
+            <span class="node-subtitle">ESP-IDF</span>
+        </div>
+        
+        <div class="connector"></div>
+
+        <div class="flow-node">
+            <i class="fas fa-cogs node-icon"></i>
+            <span class="node-title">PCA9685</span>
+            <span class="node-subtitle">I2C Protocol</span>
+        </div>
+        
+        <div class="connector"></div>
+
+        <div class="flow-node">
+            <i class="fas fa-terminal node-icon"></i>
+            <span class="node-title">PlatformIO</span>
+            <span class="node-subtitle">Arduino Framework</span>
+        </div>
+        
+    </div>
+    </section>
+
+    <section id="media" class="media-section">
+    <h2 data-ar="الميديا والفيديوهات" data-en="MEDIA & VIDEOS">MEDIA & VIDEOS</h2>
+    
+    <div class="video-grid">
+        
+        <div class="video-card">
+            <div class="video-embed-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" 
+                    title="YouTube video player 1" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="video-caption" data-ar="العرض الرئيسي لحركة الروبوت" data-en="Main Robot Movement Demonstration">Main Robot Movement Demonstration</p>
+        </div>
+        
+        <div class="video-card">
+            <div class="video-embed-container">
+                 <iframe 
+                    src="https://www.youtube.com/embed/gW2D0T5hC2E?controls=0" 
+                    title="YouTube video player 2" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="video-caption" data-ar="اختبار نظام الرؤية الحاسوبية" data-en="Computer Vision System Testing">Computer Vision System Testing</p>
+        </div>
+
+        <div class="video-card">
+            <div class="video-embed-container">
+                 <iframe 
+                    src="https://www.youtube.com/embed/YykjexC1fA8?controls=0" 
+                    title="YouTube video player 3" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="video-caption" data-ar="خلف الكواليس: التجميع والبرمجة" data-en="Behind the Scenes: Assembly & Programming">Behind the Scenes: Assembly & Programming</p>
+        </div>
+
+    </div>
 </section>
 
-<!-- Floating section indicator -->
-<div class="sec-indicator" id="secIndicator" aria-hidden="false"></div>
+    <section id="team" class="team-section">
 
-<!-- MAIN (all sections) -->
-<main id="siteMain">
-  <!-- ABOUT -->
-  <section id="about" class="card" data-id="about">
-    <h3 class="section-title">About the Project</h3>
-    <p class="lead">The Hexapod Robot Project is a six-legged research platform designed for robust locomotion, real-time vision and modular expansion. Each leg has multiple actuated joints, enabling complex gaits and stable traversal of rough terrains. The platform uses STM32-based control, ESP32-CAM for live streaming, and PCA9685 servo drivers for scalable actuation.</p>
-    <div style="margin-top:12px" class="live-stats" aria-hidden="false">
-      <div class="stat"><small>Servos</small><strong id="statServos">18</strong></div>
-      <div class="stat"><small>Voltage (V)</small><strong id="statVolt">12.6</strong></div>
-      <div class="stat"><small>Wi-Fi</small><strong id="statWifi">-56 dBm</strong></div>
-      <div class="stat"><small>Temperature</small><strong id="statTemp">34°C</strong></div>
-    </div>
-  </section>
+        <h2 data-ar="فريق العمل والمشرفون" data-en="TEAM & SUPERVISORS">TEAM & SUPERVISORS</h2>
 
-  <!-- FEATURES -->
-  <section id="features" class="card" data-id="features">
-    <h3 class="section-title">Key Features</h3>
-    <div class="grid">
-      <div class="card-feature"><img src="https://img.icons8.com/ios-filled/60/00eaff/robot-2.png" alt="" loading="lazy"><h4>Smart Gaits</h4><p>Multi-gait system with tripod, ripple and wave gaits for different speeds and stability.</p></div>
-      <div class="card-feature"><img src="https://img.icons8.com/ios-filled/60/00eaff/camera.png" alt="" loading="lazy"><h4>Live Streaming</h4><p>ESP32-CAM streams live video to mobile devices for remote piloting and inspection.</p></div>
-      <div class="card-feature"><img src="https://img.icons8.com/ios-filled/60/00eaff/balance.png" alt="" loading="lazy"><h4>Adaptive Balance</h4><p>IMU and sensor feedback used for automatic posture compensation and stability control.</p></div>
-      <div class="card-feature"><img src="https://img.icons8.com/ios-filled/60/00eaff/add.png" alt="" loading="lazy"><h4>Modular Platform</h4><p>Easily add sensors (LiDAR, ultrasonic), payloads or compute modules for research experiments.</p></div>
-    </div>
-  </section>
+        
 
-  <!-- COMPONENTS -->
-  <section id="components" class="card" data-id="components">
-    <h3 class="section-title">Main Components</h3>
-    <div class="grid">
-      <div class="card-feature"><h4>STM32F103C8T6 (Blue Pill)</h4><p>Primary real-time controller for servo sequencing and motion planning.</p></div>
-      <div class="card-feature"><h4>ESP32-CAM</h4><p>Onboard camera module for live video streaming and potential vision processing.</p></div>
-      <div class="card-feature"><h4>PCA9685 Servo Driver</h4><p>16-channel PWM driver used to expand control of multiple high-torque servos.</p></div>
-      <div class="card-feature"><h4>HC-05 Bluetooth Module</h4><p>Bluetooth interface for mobile control and debugging sessions.</p></div>
-    </div>
-  </section>
+        <div class="team-category">
 
-  <!-- HOW IT WORKS -->
-  <section id="how" class="card" data-id="how">
-    <h3 class="section-title">How It Works</h3>
-    <div class="grid">
-      <div class="card-feature"><h4>Motion Control</h4><p>Inverse kinematics compute each leg's joint angles; trajectories are executed with PWM-synced servo control.</p></div>
-      <div class="card-feature"><h4>Perception</h4><p>ESP32-CAM provides a live feed; additional sensors (IMU, ultrasonic) provide environment and orientation data.</p></div>
-      <div class="card-feature"><h4>Wireless Control</h4><p>Control via mobile app or web UI — switching gaits, camera view and movement commands in real time.</p></div>
-      <div class="card-feature"><h4>AI Upgrades</h4><p>Optional computer vision for object tracking and basic obstacle avoidance (future integration).</p></div>
-    </div>
-  </section>
+            <h3 data-ar="أعضاء الفريق (The Crew)" data-en="Team Members (The Crew)">Team Members (The Crew)</h3>
 
-  <!-- TIMELINE -->
-  <section id="timeline" class="card" data-id="timeline">
-    <h3 class="section-title">Project Timeline</h3>
-    <div class="timeline">
-      <div class="steps" id="timelineSteps" role="tablist" aria-label="timeline steps">
-        <button class="step active" data-step="1">Mechanical Design</button>
-        <button class="step" data-step="2">Electronics Integration</button>
-        <button class="step" data-step="3">Motion Programming</button>
-        <button class="step" data-step="4">Field Testing</button>
-        <button class="step" data-step="5">Final Demo</button>
-      </div>
-      <div id="stepDesc" class="desc" aria-live="polite" style="margin-top:12px">
-        <strong>Mechanical Design</strong><p style="margin-top:8px">Build the frame, choose servo motors, design leg joints and validate strength and range of motion.</p>
-      </div>
-    </div>
-  </section>
+            
 
-  <!-- TECH -->
-  <section id="tech" class="card" data-id="tech">
-    <h3 class="section-title">Tech Stack & Tools</h3>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      <div class="tech-item">STM32 (C++)</div>
-      <div class="tech-item">ESP32 / ESP-IDF</div>
-      <div class="tech-item">PCA9685 (I2C)</div>
-      <div class="tech-item">Arduino / PlatformIO</div>
-      <div class="tech-item">SolidWorks / CAD</div>
-      <div class="tech-item">Python (data)</div>
-      <div class="tech-item">OpenCV (future)</div>
-    </div>
-  </section>
+            <div class="team-grid">
 
-  <!-- MEDIA -->
-  <section id="media" class="card" data-id="media">
-    <h3 class="section-title">Media</h3>
-    <p class="lead">Demo videos and example images. Replace placeholders with your project media files for the final site.</p>
-    <div class="media-grid" style="margin-top:12px">
-      <div style="border-radius:10px;overflow:hidden;background:rgba(0,0,0,0.12)"><video controls preload="metadata" style="width:100%"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">Your browser does not support HTML video.</video></div>
-      <div style="border-radius:10px;overflow:hidden;background:rgba(0,0,0,0.12)"><img src="https://via.placeholder.com/800x480.png?text=Hexapod+Image+1" alt="placeholder" loading="lazy"></div>
-      <div style="border-radius:10px;overflow:hidden;background:rgba(0,0,0,0.12)"><img src="https://via.placeholder.com/800x480.png?text=Hexapod+Image+2" alt="placeholder2" loading="lazy"></div>
-    </div>
-  </section>
+                
 
-  <!-- TEAM -->
-  <section id="team" class="card" data-id="team">
-    <h3 class="section-title">Team</h3>
-    <p class="lead">Core team and supervisors. Images and public links are placeholders until your real assets are ready.</p>
-    <div class="team-grid" style="margin-top:12px">
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Demiana+Zaref" alt="Demiana"><div class="name">Demiana Zaref</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Team Leader</div><div style="margin-top:8px;color:#eafcff">Leading the team and managing development.</div></div>
-      <div class="profile"><img src="Image/Roaa Osama.jpg"><div class="name">Roaa Osama</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Mechanical Engineer</div><div style="margin-top:8px;color:#eafcff">Mechanical design and leg kinematics.</div></div>
-      <div class="profile"><img src="Image/Nouran Mohamed.jpg"><div class="name">Nouran Mohamed</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Electronics Engineer</div><div style="margin-top:8px;color:#eafcff">Embedded systems and circuit design.</div></div>
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Donia+Ahmed" alt="Donia"><div class="name">Donia Ahmed</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Software Integrator</div><div style="margin-top:8px;color:#eafcff">System integration and testing.</div></div>
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Farha+Yasser" alt="Farha"><div class="name">Farha Yasser</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Sensors & Data</div><div style="margin-top:8px;color:#eafcff">Sensor integration and data acquisition.</div></div>
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Nada+Mohamed" alt="Nada"><div class="name">Nada Mohamed</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Circuit Support</div><div style="margin-top:8px;color:#eafcff">Power management and PCB support.</div></div>
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Fatma+Sabry" alt="Fatma"><div class="name">Fatma Sabry</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Motion Algorithms</div><div style="margin-top:8px;color:#eafcff">Gait design and motion control algorithms.</div></div>
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Aya+Ramadan" alt="Aya"><div class="name">Aya Ramadan</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Documentation</div><div style="margin-top:8px;color:#eafcff">Project documentation and coordination.</div></div>
-    </div>
+                <div class="team-card">
 
-    <h3 class="section-title" style="margin-top:18px">Supervisors</h3>
-    <div class="team-grid" style="margin-top:12px">
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Eng+Esraa+Hamdy" alt="Esraa"><div class="name">Eng Esraa Hamdy</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Supervisor</div><div style="margin-top:8px;color:#eafcff">Technical guidance and mentoring.</div></div>
-      <div class="profile"><img src="https://via.placeholder.com/400x240.png?text=Dr+Mohamed+Attia" alt="Dr"><div class="name">Dr Mohamed Attia</div><div style="margin-top:8px;font-weight:600;color:var(--muted)">Supervisor</div><div style="margin-top:8px;color:#eafcff">Academic supervision and expertise.</div></div>
-    </div>
-  </section>
+                    <div class="member-photo-wrapper" data-member-id="1">
 
-  <!-- CONTACT -->
-  <section id="contact" class="card" data-id="contact">
-    <h3 class="section-title">Contact</h3>
-    <div class="contact-grid">
-      <div class="card-feature"><h4>Email</h4><p><a href="mailto:hexapod.project@example.com" style="color:var(--accent)">hexapod.project@example.com</a></p></div>
-      <div class="card-feature"><h4>Phone</h4><p>+123 456 7890</p></div>
-      <div class="card-feature"><h4>Location</h4><p>Robotics Lab — Cairo University</p></div>
-    </div>
+                        <img src="Image/Demiana Zaref.jpg" alt="Member 1" />
 
-    <div style="margin-top:14px">
-      <form id="contactForm" onsubmit="handleContact(event)">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-          <div><label for="name">Name</label><input id="name" type="text" placeholder="Your name" required></div>
-          <div><label for="email">Email</label><input id="email" type="email" placeholder="you@example.com" required></div>
+                    </div>
+
+                    <span class="member-name" data-ar="دميانه ظريف" data-en="Demiana Zaref(Team Leader)">Demiana Zaref(Team Leader)</span>
+
+                    <span class="team-role" data-ar="مهندس روبوتات رئيسي" data-en="Lead Robotics Engineer">Lead Robotics Engineer</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-1">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="2">
+
+                        <img src="Image/Roaa Osama.jpg" alt="Member 2" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="رؤى أسامة" data-en="Roaa Osama">Roaa Osama</span>
+
+                    <span class="team-role" data-ar="خوارزميات ورؤية حاسوب" data-en="Algorithm & CV Specialist">Algorithm & CV Specialist</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-2">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="3">
+
+                        <img src="Image/Nouran Mohamed.jpg" alt="Member 3" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="نوران محمد" data-en="Nouran Mohamed">Nouran Mohamed</span>
+
+                    <span class="team-role" data-ar="مطور أنظمة تحكم" data-en="Control System Developer">Control System Developer</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-3">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="4">
+
+                        <img src="Image/Donia Ahmed.jpg" alt="Member 4" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="دنيا احمد" data-en="Donia Ahmed">Donia Ahmed</span>
+
+                    <span class="team-role" data-ar="مصممة هيكل آلي" data-en="Mechanical Structure Designer">Mechanical Structure Designer</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-4">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="5">
+
+                        <img src="Image/Farha Yasser.jpg" alt="Member 5" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="فرحه ياسر" data-en="Farha Yasser">Farha Yasser</span>
+
+                    <span class="team-role" data-ar="مهندس إلكترونيات" data-en="Electronics Engineer">Electronics Engineer</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-5">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="6">
+
+                        <img src="Image/Fatma Sabry.jpg" alt="Member 6" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="فاطمه صبري" data-en="Fatma Sabry">Fatma Sabry</span>
+
+                    <span class="team-role" data-ar="باحثة ذكاء اصطناعي" data-en="AI Researcher">AI Researcher</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-6">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="7">
+
+                        <img src="Image/Nada Mohamed.jpg" alt="Member 7" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="ندى محمد" data-en="Nada Mohamed">Nada Mohamed</span>
+
+                    <span class="team-role" data-ar="محلل بيانات" data-en="Data Analyst">Data Analyst</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-7">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="8">
+
+                        <img src="Image/Aya Ramadan.jpg" alt="Member 8" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="آية رمضان" data-en="Aya Ramadan">Aya Ramadan</span>
+
+                    <span class="team-role" data-ar="وثائق ومحاكاة" data-en="Documentation & Simulation">Documentation & Simulation</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-8">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+            </div>
+
         </div>
-        <div style="margin-top:10px"><label for="message">Message</label><textarea id="message" placeholder="Write your message..." required></textarea></div>
-        <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
-          <button class="btn btn-primary" type="submit">Send Message</button>
-          <div style="color:var(--muted);font-size:0.9rem">This is a demo form (front-end only). Integrate backend to send messages.</div>
-        </div>
-      </form>
-    </div>
-  </section>
-</main>
 
-<!-- FOOTER -->
+        
+
+        <div class="team-category">
+
+            <h3 data-ar="المشرفون (Supervisors)" data-en="Supervisors">Supervisors</h3>
+
+            
+
+            <div class="team-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); max-width: 600px; margin-left: auto; margin-right: auto;">
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="9">
+
+                        <img src="https://via.placeholder.com/150/673AB7/FFFFFF?text=Supervisor+1" alt="Supervisor 1" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="أ.د. احمد عطيه" data-en="Prof. Dr. Ahmed Atiia">Prof. Dr. Ahmed Atiia</span>
+
+                    <span class="team-role" data-ar="المشرف الأكاديمي الرئيسي" data-en="Lead Academic Supervisor">Lead Academic Supervisor</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-9">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="team-card">
+
+                    <div class="member-photo-wrapper" data-member-id="10">
+
+                        <img src="https://via.placeholder.com/150/FF5722/FFFFFF?text=Supervisor+2" alt="Supervisor 2" />
+
+                    </div>
+
+                    <span class="member-name" data-ar="م. اسراء حمدي" data-en="Eng. Esraa Hamdy">Eng. Esraa Hamdy</span>
+
+                    <span class="team-role" data-ar="مشرف مختبر وأنظمة" data-en="Lab & Systems Supervisor">Lab & Systems Supervisor</span>
+
+                    
+
+                    <div class="social-links-reveal" id="social-10">
+
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+
+                    </div>
+
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+    </section>
+    
+       <section id="contact" class="contact-section">
+        <h2 data-ar="اتصل بنا" data-en="CONTACT">CONTACT</h2>
+        
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3 data-ar="تواصل مباشر" data-en="Get in Touch">Get in Touch</h3>
+                
+                <div class="contact-detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-ar="جامعة حلوان التكنولوجيه الدوليه - كلية الصناعه و الطاقه " data-en="Helwan International University - Industrial Technology & Energy">Helwan International University - Industrial Technology & Energy</span>
+                </div>
+                
+                <div class="contact-detail">
+                    <i class="fas fa-envelope"></i>
+                    <span data-ar="info@hexapod-robot.com" data-en="info@hexapod-robot.com">info@hexapod-robot.com</span>
+                </div>
+                
+                <div class="contact-detail">
+                    <i class="fas fa-phone"></i>
+                    <span data-ar="+20 10 XXXXXXXX" data-en="+20 10 XXXXXXXX">+20 10 XXXXXXXX</span>
+                </div>
+
+                <div class="contact-social-links">
+                    <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h3 data-ar="أرسل لنا رسالة" data-en="Send Us a Message">Send Us a Message</h3>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" class="input-field" placeholder="الاسم / Name" required data-ar-placeholder="الاسم" data-en-placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" class="input-field" placeholder="البريد الإلكتروني / Email" required data-ar-placeholder="البريد الإلكتروني" data-en-placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" class="input-field" placeholder="رسالتك / Your Message" required data-ar-placeholder="رسالتك" data-en-placeholder="Your Message"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" data-ar="إرسال الرسالة" data-en="Send Message">Send Message</button>
+                </form>
+            </div>
+        </div>
+   
+
 <footer>
-  <div style="font-weight:700">© 2025 Hexapod Robot Project</div>
-  <div style="margin-top:10px">
-    <a href="#"><img src="https://img.icons8.com/ios-glyphs/24/00eaff/facebook-new.png" alt="fb"></a>
-    <a href="#"><img src="https://img.icons8.com/ios-glyphs/24/00eaff/twitter.png" alt="tw"></a>
-    <a href="#"><img src="https://img.icons8.com/ios-glyphs/24/00eaff/instagram-new.png" alt="ig"></a>
-  </div>
 </footer>
+    </section>
+    
+    <footer class="footer">
+        <div class="social-links">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+        <div class="footer-links">
+            <a href="#about" data-ar="عن المشروع" data-en="About">About</a> | 
+            <a href="#timeline" data-ar="الجدول الزمني" data-en="Timeline">Timeline</a> | 
+            <a href="#contact" data-ar="اتصل بنا" data-en="Contact">Contact</a>
+        </div>
+        <p>&copy; 2024 Hexapod-Robot Project - Unified Vision. <span data-ar="جميع الحقوق محفوظة." data-en="All rights reserved.">All rights reserved.</span></p>
+    </footer>
 
-<script>
-/* Helpers */
-const qs = s => document.querySelector(s);
-const qsa = s => Array.from(document.querySelectorAll(s));
+    <div class="message-modal-overlay" id="success-modal-overlay">
+        <div class="message-modal-content" id="modal-content-style">
+            <div class="modal-icon"><i class="fas fa-heart" id="modal-icon"></i></div>
+            <h3 id="modal-title">Message Sent!</h3>
+            <p id="modal-body">Thank you for reaching out.</p>
+            <button class="modal-close-btn" data-ar="إغلاق" data-en="Close">Close</button>
+        </div>
+    </div>
 
-/* Mobile nav toggle */
-function toggleMobileNav(){
-  const ul = qs('#mainNav');
-  const burger = document.querySelector('.burger');
-  if(!ul) return;
-  if(ul.style.display === 'flex'){ ul.style.display = ''; burger && burger.setAttribute('aria-expanded','false'); }
-  else { ul.style.display = 'flex'; ul.style.flexDirection='column'; ul.style.background='rgba(0,0,0,0.35)'; ul.style.padding='10px'; burger && burger.setAttribute('aria-expanded','true'); }
-}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+            const langToggleBtn = document.getElementById('lang-toggle');
+            const mobileLangToggleBtn = document.getElementById('mobile-lang-toggle');
+            const navContainer = document.querySelector('.navbar-container');
+            const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
+            const cursorGlow = document.querySelector('.cursor-glow');
+            const allElementsWithLangData = document.querySelectorAll('[data-ar], [data-en]');
+            const timelineCards = document.querySelectorAll('.timeline-card');
+            const teamCards = document.querySelectorAll('.team-card'); 
+            const scrollIndicator = document.getElementById('scroll-indicator');
 
-/* Single-section mode on nav click */
-const navLinks = qsa('nav a[data-target], nav a');
-navLinks.forEach(a=>{
-  a.addEventListener('click', e=>{
-    e.preventDefault();
-    const t = (a.dataset.target || a.getAttribute('data-target') || a.textContent || '').trim().toLowerCase();
-    const map = { home:'home', about:'about', features:'features', components:'components', 'how it works':'how', how:'how', timeline:'timeline', tech:'tech', 'tech stack':'tech', media:'media', team:'team', contact:'contact' };
-    const id = map[t] || t;
-    if(id === 'home'){ exitSingleMode(); qsa('nav a').forEach(x=>x.classList.remove('active')); a.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); return; }
-    const sec = document.getElementById(id);
-    if(!sec) return;
-    enterSingleMode(sec);
-    qsa('nav a').forEach(x=>x.classList.remove('active')); a.classList.add('active');
-  });
-});
+            // عناصر نافذة الشكر المنبثقة
+            const contactForm = document.getElementById('contact-form');
+            const successModalOverlay = document.getElementById('success-modal-overlay');
+            const modalCloseBtn = document.querySelector('.modal-close-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalContent = document.getElementById('modal-content-style');
+            const modalIcon = document.getElementById('modal-icon');
 
-/* Show All button */
-qs('#showAllBtn').addEventListener('click', ()=> exitSingleMode());
-function enterSingleMode(section){
-  const allSections = qsa('main section.card');
-  allSections.forEach(s=>{
-    if(s!==section){ s.classList.add('fade-out'); setTimeout(()=> s.style.display='none', 300); }
-  });
-  section.style.display='block'; section.classList.add('fade-in');
-  document.body.classList.add('single-mode');
-  qsa('main section.card').forEach(s=> s.removeAttribute('data-active'));
-  section.setAttribute('data-active','true');
-  setTimeout(()=>{ const top = section.getBoundingClientRect().top + window.scrollY - 72; window.scrollTo({top,behavior:'smooth'}); }, 320);
-}
-function exitSingleMode(){
-  const allSections = qsa('main section.card');
-  allSections.forEach(s=>{ s.style.display='block'; s.classList.remove('fade-out'); s.classList.add('fade-in'); setTimeout(()=> s.classList.remove('fade-in'),420); });
-  document.body.classList.remove('single-mode');
-  qsa('main section.card').forEach(s=> s.removeAttribute('data-active'));
-  qsa('nav a').forEach(a=> a.classList.remove('active'));
-  const homeLink = qsa('nav a').find ? qsa('nav a').find(x=>x.dataset.target==='home') : null;
-  if(homeLink) homeLink.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
 
-/* Hero interactive viewer (two images) */
-(function(){
-  const wrap = qs('#imageWrap');
-  const imgA = qs('#imgA');
-  const imgB = qs('#imgB');
-  let dragging=false, startX=0, current=0;
-  const clamp = (v,min,max)=> Math.max(min,Math.min(max,v));
-  function update(val){
-    const aOp = clamp(1 - Math.max(0,val)*1.2,0,1);
-    const bOp = clamp(1 - Math.max(0,-val)*1.2,0,1);
-    imgA.style.opacity = aOp;
-    imgB.style.opacity = bOp;
-    const rot = val * 12;
-    const scale = 1 + Math.abs(val) * 0.02;
-    imgA.style.transform = `rotateY(${rot}deg) scale(${scale})`;
-    imgB.style.transform = `rotateY(${rot + 6}deg) scale(${scale + 0.01})`;
-  }
-  wrap.addEventListener('pointerdown', e=>{ dragging=true; startX=e.clientX; wrap.setPointerCapture && wrap.setPointerCapture(e.pointerId); wrap.style.cursor='grabbing'; });
-  window.addEventListener('pointermove', e=>{ if(!dragging) return; const dx = e.clientX - startX; const w = wrap.clientWidth || window.innerWidth; const v = clamp(dx / (w/1.5), -1, 1); current = v; update(current); });
-  window.addEventListener('pointerup', e=>{ if(!dragging) return; dragging=false; wrap.releasePointerCapture && wrap.releasePointerCapture(e.pointerId); wrap.style.cursor='grab'; const tick = ()=>{ current *= 0.85; update(current); if(Math.abs(current) > 0.01) requestAnimationFrame(tick); else update(0); }; requestAnimationFrame(tick); });
-  document.addEventListener('keydown', e=>{ if(e.key==='ArrowLeft' || e.key==='ArrowRight'){ current += (e.key==='ArrowLeft') ? -0.25 : 0.25; current = clamp(current,-1,1); update(current); setTimeout(()=>{ current *= 0.3; update(current); },350); }});
-  // idle auto rotate
-  let auto=0;
-  setInterval(()=>{ if(dragging) return; auto += 0.02; const v = 0.18 * Math.sin(auto/25); current = v; update(current); },50);
-  update(0); wrap.style.cursor='grab';
-})();
+            // ---------------------------------
+            // 9. بيانات الرسائل والألوان العشوائية (جديد)
+            // ---------------------------------
 
-/* Viewer parallax (subtle) */
-window.addEventListener('scroll', ()=>{ const v = qs('.viewer'); if(!v) return; const offset = window.scrollY * 0.06; v.style.transform = `translateY(${offset}px)`; }, {passive:true});
+            const arMessages = [
+                { title: "عيونك الحلوة!", body: "رسالتك وصلت، وكلامك زي السكر. مستحيل نتأخر في الرد على جمالك." },
+                { title: "يا ليل يا عين!", body: "ما شاء الله على الرسالة.. أي جمال في الأسلوب دا؟ انتظر ردنا، لأنك تستاهل كل الخير." },
+                { title: "أنتظرنا بفارغ الصبر!", body: "كنت فين يا جميل؟ نور الموقع بوصول رسالتك. الرد هيوصلك بسرعة البرق." },
+                { title: "كلامك العسل وصل!", body: "الرسالة منك غير، وصلت للقلب قبل صندوق الوارد. شكراً لك على هذا الجمال!" },
+                { title: "إبداع في الكتابة!", body: "الأسلوب الساحر لرسالتك أجبرنا على الرد سريعاً. نحن ممتنون لتواصلك." }
+            ];
 
-/* Entry animations for hero */
-window.addEventListener('load', ()=>{ setTimeout(()=> qs('.hero h2').classList.add('enter'),120); setTimeout(()=> qs('.hero p').classList.add('enter'),340); setTimeout(()=> qsa('.hero-cta')[0].classList.add('enter'),560); });
+            const enMessages = [
+                { title: "Your message is stunning!", body: "Your words are pure magic. We couldn't possibly ignore such charm. Expect a reply faster than you can blink." },
+                { title: "Oh my, look at this!", body: "Such eloquence! We are mesmerized by your message. We'll get back to you soon, beautiful." },
+                { title: "You made our day!", body: "We were waiting for a message this lovely. Thank you for gracing our inbox. We'll reply shortly." },
+                { title: "Message received, gorgeous!", body: "That note landed right in our hearts. Thank you for reaching out with such grace!" },
+                { title: "What a masterpiece!", body: "Your eloquent note demanded our immediate attention. Thank you for reaching out, simply wonderful." }
+            ];
 
-/* IntersectionObserver reveal */
-const io = new IntersectionObserver(entries=>{ entries.forEach(ent=>{ if(ent.isIntersecting) ent.target.classList.add('revealed'); }); }, {threshold:0.12});
-qsa('section.card').forEach(s=> io.observe(s));
+            const modalStyles = [
+                { primary: '#007BFF', hover: '#0056b3', shadow: '0 0 20px rgba(0, 123, 255, 0.7)', light: '#E3F2FD' }, // Blue
+                { primary: '#FF69B4', hover: '#c95090', shadow: '0 0 20px rgba(255, 105, 180, 0.7)', light: '#FFE4F0' }, // Pink
+                { primary: '#28A745', hover: '#1e7e34', shadow: '0 0 20px rgba(40, 167, 69, 0.7)', light: '#E6F4EA' }, // Green
+                { primary: '#FFD700', hover: '#ccac00', shadow: '0 0 20px rgba(255, 215, 0, 0.7)', light: '#FFFBE6' },  // Gold
+                { primary: '#8A2BE2', hover: '#5c1d93', shadow: '0 0 20px rgba(138, 43, 226, 0.7)', light: '#F0E6FF' }, // Purple
+                { primary: '#DC3545', hover: '#a71d2a', shadow: '0 0 20px rgba(220, 53, 69, 0.7)', light: '#F8D7DA' }  // Red
+            ];
 
-/* Timeline interaction */
-const steps = qsa('#timelineSteps .step');
-const stepDesc = qs('#stepDesc');
-const timeline = {1:{title:'Mechanical Design',txt:'Build the frame, choose servo motors, design leg joints and validate strength and range of motion.'},2:{title:'Electronics Integration',txt:'Wire controllers, connect PCA9685, test sensors and wireless communication.'},3:{title:'Motion Programming',txt:'Implement inverse kinematics, gait patterns and synchronize servos.'},4:{title:'Field Testing',txt:'Run trials on rough ground, tune PID controllers and safety checks.'},5:{title:'Final Demo',txt:'Prepare demonstration, record videos and publish reports.'}};
-function setStep(n){ steps.forEach(s=> s.classList.toggle('active', s.dataset.step==n)); const d = timeline[n]; stepDesc.innerHTML = `<strong>${d.title}</strong><p style="margin-top:8px">${d.txt}</p>`; }
-steps.forEach(s=> s.addEventListener('click', ()=> setStep(s.dataset.step))); setStep(1);
-document.addEventListener('keydown', e=>{ if(!['ArrowLeft','ArrowRight'].includes(e.key)) return; const active = qsa('#timelineSteps .step.active')[0]; if(!active) return; let idx = steps.indexOf(active); if(e.key==='ArrowRight') idx = Math.min(steps.length-1, idx+1); else idx = Math.max(0, idx-1); steps[idx].click(); steps[idx].scrollIntoView({behavior:'smooth', inline:'center'}); });
+            const getRandomItem = (array) => array[Math.floor(Math.random() * array.length)];
 
-/* Theme toggle (sun/moon) */
-const themeBtn = qs('#themeToggle');
-themeBtn.addEventListener('click', ()=>{
-  const light = document.body.classList.toggle('light');
-  themeBtn.setAttribute('aria-pressed', String(light));
-  qs('#iconMoon').style.display = light ? 'none' : 'block';
-  qs('#iconSun').style.display = light ? 'block' : 'none';
-});
 
-/* CTA buttons scroll */
-qsa('[data-scroll]').forEach(b=> b.addEventListener('click', ()=> { const id = b.getAttribute('data-scroll') || b.dataset.scroll; const el = document.getElementById(id); if(el){ el.classList.add('revealed'); const top = el.getBoundingClientRect().top + window.scrollY - 72; window.scrollTo({top,behavior:'smooth'}); } }));
+            // ---------------------------------
+            // 1. وظيفة تبديل الوضع (Dark/Light Mode)
+            // ---------------------------------
+            const setInitialTheme = () => {
+                const storedTheme = localStorage.getItem('theme');
+                if (storedTheme === 'dark') {
+                    body.classList.add('dark-mode');
+                    themeIcon.textContent = mobileThemeIcon.textContent = '☽';
+                } else {
+                    body.classList.remove('dark-mode');
+                    themeIcon.textContent = mobileThemeIcon.textContent = '☀';
+                }
+            };
 
-/* Contact form demo handler */
-function handleContact(e){ e.preventDefault(); const n = qs('#name').value.trim(), em = qs('#email').value.trim(), msg = qs('#message').value.trim(); if(!n || !em || !msg){ alert('Please fill all fields'); return; } alert(`Thanks ${n}! (Demo) Your message was captured. Integrate a backend endpoint to receive it for real.`); e.target.reset(); }
+            const toggleTheme = () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                themeIcon.textContent = mobileThemeIcon.textContent = isDarkMode ? '☽' : '☀';
+                
+                // إضافة تأثير الدوران
+                themeToggleBtn.querySelector('span').classList.add('rotating');
+                mobileThemeToggleBtn.querySelector('span').classList.add('rotating');
+                setTimeout(() => {
+                    themeToggleBtn.querySelector('span').classList.remove('rotating');
+                    mobileThemeToggleBtn.querySelector('span').classList.remove('rotating');
+                }, 500);
+            };
 
-/* Floating section indicator build */
-const sectionsOrder = ['home','about','features','components','how','timeline','tech','media','team','contact'];
-const secIndicator = qs('#secIndicator') || qs('.sec-indicator');
-if(secIndicator){
-  sectionsOrder.forEach((id,i)=>{
-    if(id==='home') return;
-    const btn = document.createElement('button');
-    btn.title = id;
-    btn.dataset.target = id;
-    btn.addEventListener('click', ()=> {
-      const el = document.getElementById(id);
-      if(el) { enterSingleMode(el); qsa('nav a').forEach(a=> a.classList.toggle('active', a.dataset.target===id)); }
-    });
-    secIndicator.appendChild(btn);
-  });
-}
+            themeToggleBtn.addEventListener('click', toggleTheme);
+            mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+            setInitialTheme(); 
 
-/* Update indicator on scroll (normal mode) */
-const indicatorBtns = secIndicator ? Array.from(secIndicator.children) : [];
-window.addEventListener('scroll', ()=>{
-  if(document.body.classList.contains('single-mode')) return;
-  const pos = window.scrollY + 140;
-  sectionsOrder.forEach(id=>{
-    const sec = document.getElementById(id);
-    if(!sec) return;
-    if(sec.offsetTop <= pos && sec.offsetTop + sec.offsetHeight > pos){
-      indicatorBtns.forEach(b=> b.classList.toggle('active', b.dataset.target===id));
-      qsa('nav a').forEach(a=> a.classList.toggle('active', a.dataset.target===id));
-    }
-  });
-}, {passive:true});
 
-/* Live stats simulation */
-(function(){
-  const servosEl = qs('#statServos'), voltEl = qs('#statVolt'), wifiEl = qs('#statWifi'), tempEl = qs('#statTemp');
-  let v = 12.6, wifi = -56, temp = 34;
-  setInterval(()=>{
-    v += (Math.random()-0.5)*0.06; v = Math.round(v*10)/10;
-    wifi += Math.round((Math.random()-0.5)*2);
-    temp += (Math.random()-0.5)*0.4; temp = Math.round(temp*10)/10;
-    servosEl.textContent = 18; voltEl.textContent = v.toFixed(1); wifiEl.textContent = wifi + ' dBm'; tempEl.textContent = temp + '°C';
-  }, 1000);
-})();
+            // ---------------------------------
+            // 2. وظيفة تبديل اللغة (Language Toggle)
+            // ---------------------------------
 
-/* Accessibility: close mobile nav on outside click */
-document.addEventListener('click', e=>{
-  const ul = qs('#mainNav'); const burger = document.querySelector('.burger');
-  if(!ul) return;
-  if(window.innerWidth <= 920 && ul.style.display === 'flex'){
-    if(!e.target.closest('#mainNav') && !e.target.closest('.burger')){ ul.style.display = ''; burger && burger.setAttribute('aria-expanded','false'); }
-  }
-});
+            const applyLanguage = (lang) => {
+                body.setAttribute('lang', lang);
+                body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+                localStorage.setItem('lang', lang);
 
-/* Ensure initial nav active (home) */
-qsa('nav a').forEach(a=> a.classList.toggle('active', a.dataset.target==='home' || a.textContent.toLowerCase().trim()==='home'));
-</script>
+                allElementsWithLangData.forEach(element => {
+                    if (element.hasAttribute(`data-${lang}`)) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                             // للـ placeholder
+                            element.setAttribute('placeholder', element.getAttribute(`data-${lang}-placeholder`));
+                        } else {
+                            // للنصوص العادية
+                            element.textContent = element.getAttribute(`data-${lang}`);
+                        }
+                    }
+                });
+
+                // تحديث نص زر اللغة
+                const newLang = lang === 'ar' ? 'en' : 'ar';
+                const langText = lang === 'ar' ? 'EN' : 'AR';
+                langToggleBtn.setAttribute('data-current', newLang);
+                mobileLangToggleBtn.setAttribute('data-current', newLang);
+                langToggleBtn.querySelector('span').textContent = langText;
+                mobileLangToggleBtn.querySelector('span').textContent = langText;
+                
+            };
+
+            const setInitialLanguage = () => {
+                let storedLang = localStorage.getItem('lang');
+                if (!storedLang) {
+                    // الكشف التلقائي عن لغة المتصفح
+                    const browserLang = navigator.language.split('-')[0];
+                    storedLang = (browserLang === 'ar') ? 'ar' : 'en';
+                }
+                applyLanguage(storedLang);
+            };
+
+            const toggleLanguage = (btn) => {
+                const currentLang = btn.getAttribute('data-current'); 
+                applyLanguage(currentLang);
+            };
+
+            langToggleBtn.addEventListener('click', () => toggleLanguage(langToggleBtn));
+            mobileLangToggleBtn.addEventListener('click', () => toggleLanguage(mobileLangToggleBtn));
+            setInitialLanguage();
+
+            // ---------------------------------
+            // 3. تأثير الماوس المتحرك (Cursor Glow)
+            // ---------------------------------
+            document.addEventListener('mousemove', (e) => {
+                cursorGlow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            });
+
+            // ---------------------------------
+            // 4. وظائف التمرير (Scroll Functions)
+            // ---------------------------------
+
+            const handleScroll = () => {
+                const scrollPosition = window.scrollY;
+
+                // Navbar scroll effect
+                if (scrollPosition > 50) {
+                    navContainer.classList.add('scrolled-nav');
+                    scrollToTopBtn.classList.add('show');
+                    scrollIndicator.classList.add('hidden');
+                } else {
+                    navContainer.classList.remove('scrolled-nav');
+                    scrollToTopBtn.classList.remove('show');
+                    scrollIndicator.classList.remove('hidden');
+                }
+
+                // Navbar link active state
+                let currentActiveSection = null;
+                document.querySelectorAll('section[id]').forEach(section => {
+                    const sectionTop = section.offsetTop - 100; // Offset for navbar
+                    if (scrollPosition >= sectionTop) {
+                        currentActiveSection = section.getAttribute('id');
+                    }
+                });
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === currentActiveSection) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', handleScroll);
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+
+            // ---------------------------------
+            // 5. وظيفة قسم الجدول الزمني (Timeline Toggle)
+            // ---------------------------------
+            timelineCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const isExpanded = card.classList.contains('expanded');
+                    
+                    // إغلاق جميع البطاقات الأخرى
+                    timelineCards.forEach(c => c.classList.remove('expanded'));
+
+                    // توسيع البطاقة المنقورة فقط إذا لم تكن موسعة بالأصل
+                    if (!isExpanded) {
+                        card.classList.add('expanded');
+                    }
+                });
+            });
+
+
+            // ---------------------------------
+            // 6. وظيفة قسم الفريق (Team Card Click - Show Social Links)
+            // ---------------------------------
+            teamCards.forEach(card => {
+                const socialLinks = card.querySelector('.social-links-reveal');
+                const photoWrapper = card.querySelector('.member-photo-wrapper');
+                
+                if (photoWrapper) {
+                    const toggleSocialLinks = (e) => {
+                        // منع انتشار الحدث ليتم تفعيله فقط عبر الصورة
+                        e.stopPropagation(); 
+                        socialLinks.classList.toggle('show');
+                    };
+
+                    // النقر على الصورة (member-photo-wrapper) يظهر/يخفي الروابط
+                    photoWrapper.addEventListener('click', toggleSocialLinks);
+                }
+            });
+
+
+            // ---------------------------------
+            // 7. وظيفة نموذج التواصل (Contact Form) (تم التعديل)
+            // ---------------------------------
+            
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const currentLang = body.getAttribute('lang');
+                const messages = currentLang === 'ar' ? arMessages : enMessages;
+                
+                // 1. اختيار رسالة عشوائية
+                const randomMessage = getRandomItem(messages);
+                modalTitle.textContent = randomMessage.title;
+                modalBody.textContent = randomMessage.body;
+
+                // 2. اختيار ستايل عشوائي وتطبيقه كمتغيرات CSS
+                const randomStyle = getRandomItem(modalStyles);
+                
+                modalContent.style.setProperty('--modal-primary-color', randomStyle.primary);
+                modalContent.style.setProperty('--modal-primary-color-hover', randomStyle.hover);
+                modalContent.style.setProperty('--modal-shadow-glow', randomStyle.shadow);
+                modalContent.style.setProperty('--modal-primary-color-light', randomStyle.light);
+                
+                // 3. عرض نافذة النجاح 
+                successModalOverlay.classList.add('show');
+                
+                // مسح محتويات النموذج
+                contactForm.reset();
+            });
+
+            const closeModal = () => {
+                successModalOverlay.classList.remove('show');
+            };
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            successModalOverlay.addEventListener('click', (e) => {
+                if (e.target === successModalOverlay) {
+                    closeModal();
+                }
+            });
+
+
+            // ---------------------------------
+            // 8. وظائف قائمة الموبايل (Mobile Menu)
+            // ---------------------------------
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileNavOverlay.classList.add('open');
+            });
+
+            const closeMobileMenu = () => {
+                mobileNavOverlay.classList.remove('open');
+            };
+            closeMenuBtn.addEventListener('click', closeMobileMenu);
+            
+            // إغلاق القائمة عند النقر على أي رابط داخلها
+            document.querySelectorAll('.mobile-nav-overlay .nav-link').forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            // تمرير سلس (عند النقر على رابط)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70, // تعديل الـ offset للـ Navbar
+                            behavior: 'smooth'
+                        });
+                    }
+                    
+                    // تحديث الحالة النشطة للرابط (للروابط في شريط التنقل الرئيسي)
+                    const navLinks = document.querySelectorAll('.nav-link');
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    const targetLink = document.querySelector(`.nav-links a[href="${targetId}"]`);
+                    if (targetLink) {
+                        targetLink.classList.add('active');
+                    }
+                });
+            });
+
+             // تشغيل الدالة مرة واحدة للتأكد من الحالة الأولية
+             handleScroll(); 
+        });
+    </script>
+    
 </body>
 </html>
