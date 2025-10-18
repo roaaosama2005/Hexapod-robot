@@ -1537,20 +1537,45 @@
                 <div class="value">38.7°C</div>
             </div>
             
+            <div class="spec-item">
+                <div class="label-group">
+                    <i class="fas fa-brain icon"></i> 
+                    <span data-ar="المتحكم الرئيسي" data-en="Core MCU">المتحكم الرئيسي</span>
+                </div>
+                <div class="value">STM32</div>
+            </div>
+
+            <div class="spec-item">
+                <div class="label-group">
+                    <i class="fas fa-angle-double-right icon"></i> 
+                    <span data-ar="درجات الحرية" data-en="Degrees of Freedom">درجات الحرية</span>
+                </div>
+                <div class="value">18 DOF</div>
+            </div>
+            
         </div>
         
         <div class="about-text-column">
-            <h3 style="color: var(--primary-color); font-size: 1.8rem; margin-bottom: 20px;" data-ar="منصة البحث السداسية" data-en="The Six-Legged Research Platform">منصة البحث السداسية</h3>
             
-            <p style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.7;">
-                <span data-en="The Hexapod Robot Project is a robust, six-legged platform specifically engineered for advanced research in dynamic locomotion, autonomous vision, and modular expansion. The architecture is built for maximum resilience." data-ar="روبوت هيكسابود هو منصة بحثية سداسية الأرجل، مصممة خصيصاً للحركة القوية والرؤية في الوقت الفعلي والتوسع المعياري. هذه المنصة القابلة للتخصيص تعد أساساً مثالياً للتجارب الروبوتية المتقدمة.">
-                    روبوت هيكسابود هو منصة بحثية سداسية الأرجل، مصممة خصيصاً للحركة القوية والرؤية في الوقت الفعلي والتوسع المعياري. هذه المنصة القابلة للتخصيص تعد أساساً مثالياً للتجارب الروبوتية المتقدمة.
+            <h3 style="color: var(--primary-color); font-size: 1.8rem; margin-bottom: 20px;" data-ar="منصة البحث السداسية المتكاملة" data-en="The Integrated Six-Legged Research Platform">منصة البحث السداسية المتكاملة</h3>
+            
+            <p style="margin-bottom: 30px; font-size: 1.1rem; line-height: 1.7;">
+                <span data-en="The Hexapod Robot Project is a robust, six-legged platform specifically engineered for advanced research in dynamic locomotion, autonomous vision, and modular expansion. The architecture is built for maximum resilience and adaptability in unstructured environments." data-ar="روبوت هيكسابود هو منصة بحثية سداسية الأرجل، مصممة خصيصاً للحركة القوية والرؤية في الوقت الفعلي والتوسع المعياري. هذه المنصة القابلة للتخصيص تعد أساساً مثالياً للتجارب الروبوتية المتقدمة وتتميز بمرونتها العالية في البيئات غير المهيكلة.">
+                    روبوت هيكسابود هو منصة بحثية سداسية الأرجل، مصممة خصيصاً للحركة القوية والرؤية في الوقت الفعلي والتوسع المعياري. هذه المنصة القابلة للتخصيص تعد أساساً مثالياً للتجارب الروبوتية المتقدمة وتتميز بمرونتها العالية في البيئات غير المهيكلة.
                 </span>
             </p>
             
-            <p style="font-size: 1rem; opacity: 0.8; line-height: 1.7;">
-                <span data-en="Each leg features multiple actuated joints, enabling the generation of complex gaits necessary for stable traversal across diverse and rough terrains. The control heart is an STM32-based system, driving 18 servos via PCA9685 boards for scalable, precise actuation. The integration of ESP32-CAM provides essential visual data through real-time streaming." data-ar="تعتمد المنصة على نظام تحكم مركزي STM32، وتدير 18 مفصلاً نشطاً عبر مشغلات PCA9685 لزيادة كفاءة المحركات. يشتمل التصميم على وحدة ESP32-CAM للرؤية والبث المباشر.">
-                    تعتمد المنصة على نظام تحكم مركزي STM32، وتدير 18 مفصلاً نشطاً عبر مشغلات PCA9685 لزيادة كفاءة المحركات. يشتمل التصميم على وحدة ESP32-CAM للرؤية والبث المباشر.
+            <h4 style="color: var(--secondary-accent); font-size: 1.4rem; margin-bottom: 10px;" data-ar="🎯 الأهداف والتوجه البحثي" data-en="🎯 Project Vision & Research Focus">🎯 الأهداف والتوجه البحثي</h4>
+            <p style="margin-bottom: 20px; font-size: 1rem; opacity: 0.9; line-height: 1.7;">
+                <span data-en="Our primary goal is to provide a fully documented, open-source platform that simplifies the development and testing of novel locomotion algorithms and sensory integration techniques, making advanced robotics accessible to researchers and hobbyists alike." data-ar="الهدف الأساسي هو توفير منصة مفتوحة المصدر وموثقة بالكامل، تبسط تطوير واختبار خوارزميات الحركة المبتكرة وتقنيات دمج المستشعرات. هذا يجعل مجال الروبوتات المتقدمة متاحًا للباحثين والمطورين على حد سواء.">
+                    الهدف الأساسي هو توفير منصة مفتوحة المصدر وموثقة بالكامل، تبسط تطوير واختبار خوارزميات الحركة المبتكرة وتقنيات دمج المستشعرات. هذا يجعل مجال الروبوتات المتقدمة متاحاً للباحثين والمطورين على حد سواء.
+                </span>
+            </p>
+            
+            <h4 style="color: var(--secondary-accent); font-size: 1.4rem; margin-bottom: 10px;" data-ar="⚙️ نظام الحركة (Locomotion)" data-en="⚙️ Locomotion & Joint System">⚙️ نظام الحركة (Locomotion)</h4>
+            <p style="font-size: 1rem; opacity: 0.9; line-height: 1.7;">
+                <span data-en="The Hexapod boasts 18 Degrees of Freedom (DOF), three per leg, managed by a scalable PCA9685 driver system. This setup is crucial for executing complex Inverse Kinematics (IK) calculations, allowing the robot to dynamically shift its center of gravity and maintain equilibrium while traversing obstacles." data-ar="يتميز الروبوت بـ 18 درجة حرية (DOF)، ثلاثة في كل ساق، يتم التحكم فيها بواسطة نظام مشغلات PCA9685 قابل للتوسع. هذا الإعداد ضروري لتنفيذ حسابات الحركية العكسية (IK) المعقدة، مما يسمح للروبوت بتحويل مركز ثقله ديناميكياً والحفاظ على التوازن أثناء تجاوز العوائق.">
+                    يتميز الروبوت بـ 18 درجة حرية (DOF)، ثلاثة في كل ساق، يتم التحكم فيها بواسطة نظام مشغلات PCA9685 قابل للتوسع. هذا الإعداد ضروري لتنفيذ حسابات الحركية العكسية (IK) المعقدة، مما يسمح للروبوت بتحويل مركز ثقله ديناميكياً والحفاظ على التوازن أثناء تجاوز العوائق.
                 </span>
             </p>
             
